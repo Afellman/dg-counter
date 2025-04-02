@@ -2,7 +2,7 @@ import { Box, Container, Typography } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
-const TopBar = () => {
+const TopBar = ({ back }) => {
     const navigate = useNavigate();
     const location = useLocation();
     return (
@@ -15,7 +15,10 @@ const TopBar = () => {
                 }}
             >
                 {location.pathname !== "/" && (
-                    <ArrowBackIosIcon style={{ cursor: "pointer" }} onClick={() => navigate(`/`)} />
+                    <ArrowBackIosIcon
+                        style={{ cursor: "pointer" }}
+                        onClick={() => navigate(`/${back ? back : ""}`)}
+                    />
                 )}
                 <Typography variant="h6">DG Tracker</Typography>
             </Box>

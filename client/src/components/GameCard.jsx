@@ -2,11 +2,11 @@ import { Paper, Stack, Typography } from "@mui/material";
 import { ArrowForwardIos } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
-const GameCard = ({ game }) => {
+const GameCard = ({ game, back }) => {
     const navigate = useNavigate();
     return (
         <Paper
-            onClick={() => navigate(`/game/results/${game._id}`)}
+            onClick={() => navigate(`/game/results/${game._id}${back ? `?back=${back}` : ""}`)}
             key={game._id}
             sx={{
                 cursor: "pointer",

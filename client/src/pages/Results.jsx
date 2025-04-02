@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Box, Stack, Typography, Container, Button } from "@mui/material";
 import TopBar from "../components/TopBar";
@@ -6,6 +6,8 @@ import TopBar from "../components/TopBar";
 const Results = () => {
     const { id } = useParams();
     const [game, setGame] = useState(null);
+    const [searchParams] = useSearchParams();
+    const back = searchParams.get("back");
 
     useEffect(() => {
         fetch(`/api/game/${id}`)
@@ -21,7 +23,7 @@ const Results = () => {
 
     return (
         <>
-            <TopBar />
+            <TopBar back={back} />
             <Stack spacing={2}>
                 <Box sx={{ backgroundColor: "#eee", padding: "2rem" }}>
                     <Typography variant="h3" textAlign="center">

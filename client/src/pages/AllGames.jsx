@@ -2,6 +2,7 @@ import TopBar from "../components/TopBar";
 import { Container, Typography, Stack, Box } from "@mui/material";
 import { useState, useEffect } from "react";
 import GameCard from "../components/GameCard";
+
 const AllGames = () => {
     const [games, setGames] = useState([]);
     useEffect(() => {
@@ -18,7 +19,7 @@ const AllGames = () => {
                     <Typography variant="h3">All Games</Typography>
                     <Stack spacing={2}>
                         {games.map((game) => (
-                            <GameCard key={game._id} game={game} />
+                            <GameCard key={game._id} game={game} back="all-games" />
                         ))}
                     </Stack>
                 </Stack>

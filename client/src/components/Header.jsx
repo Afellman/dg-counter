@@ -1,3 +1,5 @@
+import { Box, Typography } from "@mui/material";
+
 const Header = () => {
     return (
         <Box sx={{ backgroundColor: "red", padding: "2rem" }}>
