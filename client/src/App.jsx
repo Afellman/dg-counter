@@ -3,6 +3,7 @@ import TopBar from "./components/TopBar";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GameCard from "./components/GameCard";
+import Header from "./components/Header";
 
 function App() {
     const navigate = useNavigate();
@@ -17,11 +18,7 @@ function App() {
         <>
             <TopBar />
             <Stack spacing={2}>
-                <Box sx={{ backgroundColor: "red", padding: "2rem" }}>
-                    <Typography variant="h3" textAlign="center">
-                        DG Tracker
-                    </Typography>
-                </Box>
+                <Header />
                 <Container>
                     <Button
                         variant="contained"
