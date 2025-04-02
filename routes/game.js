@@ -1,8 +1,13 @@
 const router = require("express").Router();
 const Game = require("../models/GameModel");
 
-router.get("/", async (req, res) => {
+router.get("/all", async (req, res) => {
     const games = await Game.find();
+    res.json(games);
+});
+
+router.get("/recent", async (req, res) => {
+    const games = await Game.find().sort({ createdAt: -1 }).limit(5);
     res.json(games);
 });
 

@@ -1,11 +1,13 @@
 import { Typography, Stack, Box, Container, Button } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Add, Remove, ArrowBack, ArrowForward } from "@mui/icons-material";
+import TopBar from "../components/TopBar";
 
 const Play = () => {
     const { id } = useParams();
     const [game, setGame] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch(`/api/game/${id}`)
@@ -16,6 +18,10 @@ const Play = () => {
     }, [id]);
 
     const onChangeHole = async (direction) => {
+        if (game.currentHole === 18 && direction === 1) {
+            navigate(`/game/results/${game._id}`);
+            return;
+        }
         try {
             const res = await fetch(`/api/game/${game._id}/hole`, {
                 method: "PUT",
@@ -69,49 +75,52 @@ const Play = () => {
     }
 
     return (
-        <Stack spacing={2}>
-            <Box sx={{ backgroundColor: "grey", padding: "2rem" }}>
-                <Typography variant="h3" textAlign="center">
-                    {game.gameName}
-                </Typography>
-            </Box>
-            <Container>
-                <Stack spacing={4}>
-                    <Stack spacing={2}>
-                        {game.players.map((player) => (
-                            <PlayerTicks
-                                key={player.name}
-                                game={game}
-                                player={player}
-                                onChangeStroke={onChangeStroke}
-                            />
-                        ))}
+        <>
+            <TopBar />
+            <Stack spacing={2}>
+                <Box sx={{ backgroundColor: "grey", padding: "2rem" }}>
+                    <Typography variant="h3" textAlign="center">
+                        {game.gameName}
+                    </Typography>
+                </Box>
+                <Container>
+                    <Stack spacing={4}>
+                        <Stack spacing={2}>
+                            {game.players.map((player) => (
+                                <PlayerTicks
+                                    key={player.name}
+                                    game={game}
+                                    player={player}
+                                    onChangeStroke={onChangeStroke}
+                                />
+                            ))}
+                        </Stack>
                     </Stack>
-                </Stack>
-            </Container>
-            <Box
-                sx={{
-                    position: "fixed",
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    backgroundColor: "grey",
-                    padding: "2rem",
-                    display: "flex",
-                    justifyContent: "space-between",
-                }}
-            >
-                <Button variant="contained" color="primary" onClick={() => onChangeHole(-1)}>
-                    <ArrowBack />
-                </Button>
-                <Typography variant="h4" textAlign="center">
-                    Hole {game.currentHole}
-                </Typography>
-                <Button variant="contained" color="primary" onClick={() => onChangeHole(1)}>
-                    <ArrowForward />
-                </Button>
-            </Box>
-        </Stack>
+                </Container>
+                <Box
+                    sx={{
+                        position: "fixed",
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        backgroundColor: "grey",
+                        padding: "2rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <Button variant="contained" color="primary" onClick={() => onChangeHole(-1)}>
+                        <ArrowBack />
+                    </Button>
+                    <Typography variant="h4" textAlign="center">
+                        Hole {game.currentHole}
+                    </Typography>
+                    <Button variant="contained" color="primary" onClick={() => onChangeHole(1)}>
+                        {game.currentHole === 18 ? "Finish" : <Add />}
+                    </Button>
+                </Box>
+            </Stack>
+        </>
     );
 };
 
