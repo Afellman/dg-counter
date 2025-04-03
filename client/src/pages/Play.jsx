@@ -75,26 +75,54 @@ const Play = () => {
         return <div>Loading...</div>;
     }
 
+    const onChangePar = async (direction) => {
+        const newGame = { ...game };
+        const oldGame = { ...game };
+        const newPar = newGame.holes[game.currentHole - 1].par + direction;
+        newGame.holes[game.currentHole - 1].par = newPar;
+        setGame(newGame);
+
+        try {
+            await fetch(`/api/game/${game._id}/hole/${game.currentHole}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ par: newPar }),
+            });
+        } catch (error) {
+            console.error(error);
+            setGame(oldGame);
+        }
+    };
+
     return (
         <>
             <TopBar />
             <Stack spacing={2}>
                 <Header title={game.gameName} />
                 <Container>
-                    <Stack spacing={4}>
-                        <Stack spacing={2}>
-                            {game.players.map((player, i) => (
-                                <>
-                                    <PlayerTicks
-                                        key={player.name}
-                                        game={game}
-                                        player={player}
-                                        onChangeStroke={onChangeStroke}
-                                    />
-                                    {i < game.players.length - 1 && <Divider />}
-                                </>
-                            ))}
+                    <Stack spacing={2}>
+                        <Stack direction="row" spacing={2} alignItems="center">
+                            <Typography variant="h4">Par {game.holes[game.currentHole - 1].par}</Typography>
+                            <Button variant="outlined" size="small" onClick={() => onChangePar(-1)}>
+                                -
+                            </Button>
+                            <Button variant="outlined" size="small" onClick={() => onChangePar(1)}>
+                                +
+                            </Button>
                         </Stack>
+                        {game.players.map((player, i) => (
+                            <>
+                                <PlayerTicks
+                                    key={player.name}
+                                    game={game}
+                                    player={player}
+                                    onChangeStroke={onChangeStroke}
+                                />
+                                {i < game.players.length - 1 && <Divider />}
+                            </>
+                        ))}
                     </Stack>
                 </Container>
                 <Box

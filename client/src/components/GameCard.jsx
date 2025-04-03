@@ -49,7 +49,7 @@ const GameCard = ({ game, back }) => {
             {game.currentHole === game.holes.length ? (
                 <ArrowForwardIos fontSize="small" />
             ) : (
-                <Button variant="text" color="success" onClick={onClick}>
+                <Button variant="outlined" color="text.primary" onClick={onClick}>
                     Continue
                 </Button>
             )}

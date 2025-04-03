@@ -70,6 +70,16 @@ router.post("/", async (req, res) => {
     res.send(game);
 });
 
+router.put("/:id/hole/:holeID", async (req, res) => {
+    const { id, holeID } = req.params;
+    const { par } = req.body;
+
+    const game = await Game.findById(id);
+    game.holes[holeID - 1].par = par;
+    await game.save();
+    res.send(game);
+});
+
 router.put("/:id/", async (req, res) => {
     const { game } = req.body;
     const dbGame = await Game.findOneAndUpdate({ _id: req.params.id }, game, { new: true });
