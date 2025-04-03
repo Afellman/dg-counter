@@ -32,7 +32,12 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use("/api", router);
 app.use(express.static(path.join(__dirname, "dist")));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 
 mongoose
     .connect(process.env.MONGO_URI || "mongodb://localhost:27017/dg-tracker")
@@ -46,5 +51,3 @@ mongoose
         console.error("Error connecting to MongoDB", err);
         process.exit(1);
     });
-
-app.use("/api", router);
