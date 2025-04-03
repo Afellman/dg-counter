@@ -7,6 +7,10 @@ import Game from "./pages/Game.jsx";
 import Play from "./pages/Play.jsx";
 import Results from "./pages/Results.jsx";
 import AllGames from "./pages/AllGames.jsx";
+import AuthWrapper from "./components/AuthWrapper.jsx";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import theme from "./theme";
 
 const router = createBrowserRouter([
     {
@@ -30,8 +34,14 @@ const router = createBrowserRouter([
         element: <AllGames />,
     },
 ]);
+
 createRoot(document.getElementById("root")).render(
     <StrictMode>
-        <RouterProvider router={router} />
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <AuthWrapper>
+                <RouterProvider router={router} />
+            </AuthWrapper>
+        </ThemeProvider>
     </StrictMode>,
 );

@@ -46,19 +46,21 @@ router.put("/:gameID/:playerID/stroke", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-    const { players, gameName, holes } = req.body;
+    const { players, gameName, holes, courseName } = req.body;
 
+    console.log(req.body);
     const game = new Game({
         players: players.map((player) => ({
             name: player,
-            scores: new Array(holes).fill(0).map((_, i) => ({
+            scores: new Array(parseInt(holes)).fill(0).map((_, i) => ({
                 hole: i + 1,
                 strokes: 3,
             })),
         })),
         gameName,
+        courseName,
         // Assuming all holes have the same par to start
-        holes: new Array(holes).fill(0).map((_, i) => ({
+        holes: new Array(parseInt(holes)).fill(0).map((_, i) => ({
             number: i + 1,
             par: 3,
         })),

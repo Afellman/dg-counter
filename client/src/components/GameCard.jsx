@@ -6,6 +6,7 @@ const GameCard = ({ game, back }) => {
     const navigate = useNavigate();
     return (
         <Paper
+            elevation={2}
             onClick={() => navigate(`/game/results/${game._id}${back ? `?back=${back}` : ""}`)}
             key={game._id}
             sx={{
@@ -15,7 +16,6 @@ const GameCard = ({ game, back }) => {
                 alignItems: "center",
                 padding: "0.5rem",
                 backgroundColor: "#fff",
-                borderRadius: "4px",
             }}
         >
             <Stack>

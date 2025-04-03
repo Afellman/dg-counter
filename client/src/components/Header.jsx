@@ -1,10 +1,13 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 
-const Header = () => {
+const Header = ({ title }) => {
+    const theme = useTheme();
+    const backgroundColor = theme.palette.primary.main;
+
     return (
-        <Box sx={{ backgroundColor: "red", padding: "2rem" }}>
-            <Typography variant="h3" textAlign="center">
-                DG Tracker
+        <Box sx={{ backgroundColor, padding: "2rem" }}>
+            <Typography variant="h3" textAlign="center" color="white">
+                {title}
             </Typography>
         </Box>
     );

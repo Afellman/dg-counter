@@ -1,8 +1,9 @@
-import { Typography, Stack, Box, Container, Button } from "@mui/material";
+import { Typography, Stack, Box, Container, Button, Divider } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Add, Remove, ArrowBack, ArrowForward } from "@mui/icons-material";
 import TopBar from "../components/TopBar";
+import Header from "../components/Header";
 
 const Play = () => {
     const { id } = useParams();
@@ -18,8 +19,8 @@ const Play = () => {
     }, [id]);
 
     const onChangeHole = async (direction) => {
-        if (game.currentHole === 18 && direction === 1) {
-            navigate(`/game/results/${game._id}`);
+        if (game.currentHole === game.holes.length && direction === 1) {
+            navigate(`/game/results/${game._id}?back=game/play/${game._id}&finish=true`);
             return;
         }
         try {
@@ -78,21 +79,20 @@ const Play = () => {
         <>
             <TopBar />
             <Stack spacing={2}>
-                <Box sx={{ backgroundColor: "grey", padding: "2rem" }}>
-                    <Typography variant="h3" textAlign="center">
-                        {game.gameName}
-                    </Typography>
-                </Box>
+                <Header title={game.gameName} />
                 <Container>
                     <Stack spacing={4}>
                         <Stack spacing={2}>
-                            {game.players.map((player) => (
-                                <PlayerTicks
-                                    key={player.name}
-                                    game={game}
-                                    player={player}
-                                    onChangeStroke={onChangeStroke}
-                                />
+                            {game.players.map((player, i) => (
+                                <>
+                                    <PlayerTicks
+                                        key={player.name}
+                                        game={game}
+                                        player={player}
+                                        onChangeStroke={onChangeStroke}
+                                    />
+                                    {i < game.players.length - 1 && <Divider />}
+                                </>
                             ))}
                         </Stack>
                     </Stack>
@@ -103,7 +103,6 @@ const Play = () => {
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        backgroundColor: "grey",
                         padding: "2rem",
                         display: "flex",
                         justifyContent: "space-between",
@@ -116,7 +115,7 @@ const Play = () => {
                         Hole {game.currentHole}
                     </Typography>
                     <Button variant="contained" color="primary" onClick={() => onChangeHole(1)}>
-                        {game.currentHole === 18 ? "Finish" : <Add />}
+                        {game.currentHole === game.holes.length ? "Finish" : <Add />}
                     </Button>
                 </Box>
             </Stack>
@@ -139,18 +138,24 @@ const PlayerTicks = ({ game, player, onChangeStroke }) => {
                     </Typography>
                     <Typography variant="h4">{player.name}</Typography>
                 </Stack>
-                <Stack direction="row" spacing={2}>
+                <Stack direction="row" spacing={2} alignItems="center">
                     <Button
                         variant="contained"
                         color="primary"
                         onClick={() => onChangeStroke(player._id, -1)}
+                        sx={{ minWidth: "40px", width: "40px", height: "40px", padding: 0 }}
                     >
                         <Remove />
                     </Button>
                     <Typography variant="h4">
                         {player.scores.find((s) => s.hole === game.currentHole)?.strokes || 0}
                     </Typography>
-                    <Button variant="contained" color="primary" onClick={() => onChangeStroke(player._id, 1)}>
+                    <Button
+                        sx={{ minWidth: "40px", width: "40px", height: "40px", padding: 0 }}
+                        variant="contained"
+                        color="primary"
+                        onClick={() => onChangeStroke(player._id, 1)}
+                    >
                         <Add />
                     </Button>
                 </Stack>

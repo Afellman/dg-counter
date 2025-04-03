@@ -14,43 +14,46 @@ function App() {
             .then((res) => res.json())
             .then((data) => setRecentGames(data));
     }, []);
+
     return (
         <>
             <TopBar />
             <Stack spacing={2}>
-                <Header />
+                <Header title="DG Tracker" />
                 <Container>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                            navigate("/game");
-                        }}
-                    >
-                        Start new game
-                    </Button>
+                    <div style={{ display: "flex" }}>
+                        <Button
+                            sx={{ flex: 1 }}
+                            size="large"
+                            variant="contained"
+                            color="success"
+                            onClick={() => {
+                                navigate("/game");
+                            }}
+                        >
+                            Start new game
+                        </Button>
+                    </div>
                     <Stack spacing={2} sx={{ width: "100%", marginTop: 4 }}>
                         <Typography variant="h5" textAlign="center">
                             Recent Games
                         </Typography>
-                        <Box sx={{ padding: "1rem" }}>
-                            <Stack spacing={2}>
-                                {recentGames?.map((game) => (
-                                    <GameCard
-                                        key={game._id}
-                                        game={game}
-                                        onNavigate={() => navigate(`/game/results/${game._id}`)}
-                                    />
-                                ))}
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => navigate("/all-games")}
-                                >
-                                    View all games
-                                </Button>
-                            </Stack>
-                        </Box>
+                        <Stack spacing={2}>
+                            {recentGames?.map((game) => (
+                                <GameCard
+                                    key={game._id}
+                                    game={game}
+                                    onNavigate={() => navigate(`/game/results/${game._id}`)}
+                                />
+                            ))}
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => navigate("/all-games")}
+                            >
+                                View all games
+                            </Button>
+                        </Stack>
                     </Stack>
                 </Container>
             </Stack>
