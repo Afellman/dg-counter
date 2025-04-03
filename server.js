@@ -3,9 +3,10 @@ const router = require("./routes");
 const winston = require("winston");
 const path = require("path");
 const { default: mongoose } = require("mongoose");
+require("dotenv").config();
 
 const app = express();
-const port = 8081;
+const PORT = process.env.PORT || 8081;
 
 const logger = winston.createLogger({
     level: "info",
@@ -33,10 +34,10 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname, "dist")));
 
-mongoose.connect("mongodb://localhost:27017/dg-tracker").then(() => {
+mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/dg-tracker").then(() => {
     console.log("Connected to MongoDB");
-    app.listen(port, () => {
-        console.log(`Server is running on port ${port}`);
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
     });
 });
 
