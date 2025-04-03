@@ -34,11 +34,17 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname, "dist")));
 
-mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/dg-tracker").then(() => {
-    console.log("Connected to MongoDB");
-    app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
+mongoose
+    .connect(process.env.MONGO_URI || "mongodb://localhost:27017/dg-tracker")
+    .then(() => {
+        console.log("Connected to MongoDB");
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.error("Error connecting to MongoDB", err);
+        process.exit(1);
     });
-});
 
 app.use("/api", router);
