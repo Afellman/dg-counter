@@ -98,55 +98,49 @@ const Play = () => {
 
     return (
         <>
-            <TopBar />
             <Stack spacing={2}>
-                <Header title={game.gameName} />
-                <Container>
-                    <Stack spacing={2}>
-                        <Stack direction="row" spacing={2} alignItems="center">
-                            <Typography variant="h4">Par {game.holes[game.currentHole - 1].par}</Typography>
-                            <Button variant="outlined" size="small" onClick={() => onChangePar(-1)}>
-                                -
-                            </Button>
-                            <Button variant="outlined" size="small" onClick={() => onChangePar(1)}>
-                                +
-                            </Button>
-                        </Stack>
-                        {game.players.map((player, i) => (
-                            <>
-                                <PlayerTicks
-                                    key={player.name}
-                                    game={game}
-                                    player={player}
-                                    onChangeStroke={onChangeStroke}
-                                />
-                                {i < game.players.length - 1 && <Divider />}
-                            </>
-                        ))}
-                    </Stack>
-                </Container>
-                <Box
-                    sx={{
-                        position: "fixed",
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        padding: "2rem",
-                        display: "flex",
-                        justifyContent: "space-between",
-                    }}
-                >
-                    <Button variant="contained" color="primary" onClick={() => onChangeHole(-1)}>
-                        <ArrowBack />
+                <Stack direction="row" spacing={2} alignItems="center">
+                    <Typography variant="h4">Par {game.holes[game.currentHole - 1].par}</Typography>
+                    <Button variant="outlined" size="small" onClick={() => onChangePar(-1)}>
+                        -
                     </Button>
-                    <Typography variant="h4" textAlign="center">
-                        Hole {game.currentHole}
-                    </Typography>
-                    <Button variant="contained" color="primary" onClick={() => onChangeHole(1)}>
-                        {game.currentHole === game.holes.length ? "Finish" : <Add />}
+                    <Button variant="outlined" size="small" onClick={() => onChangePar(1)}>
+                        +
                     </Button>
-                </Box>
+                </Stack>
+                {game.players.map((player, i) => (
+                    <>
+                        <PlayerTicks
+                            key={player.name}
+                            game={game}
+                            player={player}
+                            onChangeStroke={onChangeStroke}
+                        />
+                        {i < game.players.length - 1 && <Divider />}
+                    </>
+                ))}
             </Stack>
+            <Box
+                sx={{
+                    position: "fixed",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    padding: "2rem",
+                    display: "flex",
+                    justifyContent: "space-between",
+                }}
+            >
+                <Button variant="contained" color="primary" onClick={() => onChangeHole(-1)}>
+                    <ArrowBack />
+                </Button>
+                <Typography variant="h4" textAlign="center">
+                    Hole {game.currentHole}
+                </Typography>
+                <Button variant="contained" color="primary" onClick={() => onChangeHole(1)}>
+                    {game.currentHole === game.holes.length ? "Finish" : <Add />}
+                </Button>
+            </Box>
         </>
     );
 };

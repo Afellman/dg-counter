@@ -27,7 +27,7 @@ const AuthWrapper = ({ children }) => {
     if (!isAuthenticated) {
         return (
             <Stack spacing={2}>
-                <Header title="DG Tracker" />
+                <Header />
                 <Container>
                     <Stack spacing={1}>
                         <Typography>Please login to continue</Typography>

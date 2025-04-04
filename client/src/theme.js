@@ -69,6 +69,7 @@ const theme = createTheme({
             styleOverrides: {
                 root: {
                     textTransform: "none",
+
                     // borderRadius: 4,
                     "&.Mui-disabled": {
                         backgroundColor: "#e0e0e0",
@@ -77,6 +78,16 @@ const theme = createTheme({
                             backgroundColor: "#e0e0e0",
                         },
                     },
+                },
+                containedSuccess: {
+                    color: "#fff",
+                },
+            },
+        },
+        MuiOutlinedInput: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: "#fff",
                 },
             },
         },
