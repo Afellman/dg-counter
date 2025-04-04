@@ -3,37 +3,37 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
     palette: {
         primary: {
-            main: "#1976d2", // A nice blue color
-            light: "#42a5f5",
-            dark: "#1565c0",
+            main: "#3d8361", // Forest green - representing disc golf courses
+            light: "#65b48e",
+            dark: "#1e5631",
         },
         secondary: {
-            main: "#9c27b0", // A purple color
-            light: "#ba68c8",
-            dark: "#7b1fa2",
+            main: "#5e81ac", // Sky blue - like the open sky on a course
+            light: "#81a1c1",
+            dark: "#406185",
         },
         success: {
-            main: "#4caf50", // A better green color
-            light: "#81c784",
-            dark: "#388e3c",
+            main: "#a3be8c", // Soft green - like course fairways
+            light: "#c0d9a0",
+            dark: "#7b9f5e",
         },
         error: {
-            main: "#d32f2f", // A red color
-            light: "#ef5350",
-            dark: "#c62828",
+            main: "#bf616a", // Muted red
+            light: "#d07a82",
+            dark: "#99454d",
         },
         warning: {
-            main: "#ed6c02", // An orange color
-            light: "#ff9800",
-            dark: "#e65100",
+            main: "#ebcb8b", // Warm amber - like autumn leaves on a course
+            light: "#f2dca7",
+            dark: "#c4a86d",
         },
         info: {
-            main: "#0288d1", // A light blue color
-            light: "#03a9f4",
-            dark: "#01579b",
+            main: "#88c0d0", // Light blue - like water hazards
+            light: "#a3d5e4",
+            dark: "#6d99a8",
         },
         background: {
-            default: "#f5f5f5",
+            default: "#f7f7f7",
             paper: "#ffffff",
         },
     },

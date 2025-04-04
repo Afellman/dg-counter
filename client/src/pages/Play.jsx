@@ -1,4 +1,4 @@
-import { Typography, Stack, Box, Container, Button, Divider } from "@mui/material";
+import { Typography, Stack, Box, Container, Button, Divider, Card } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Add, Remove, ArrowBack, ArrowForward } from "@mui/icons-material";
@@ -99,15 +99,6 @@ const Play = () => {
     return (
         <>
             <Stack spacing={2}>
-                <Stack direction="row" spacing={2} alignItems="center">
-                    <Typography variant="h4">Par {game.holes[game.currentHole - 1].par}</Typography>
-                    <Button variant="outlined" size="small" onClick={() => onChangePar(-1)}>
-                        -
-                    </Button>
-                    <Button variant="outlined" size="small" onClick={() => onChangePar(1)}>
-                        +
-                    </Button>
-                </Stack>
                 {game.players.map((player, i) => (
                     <>
                         <PlayerTicks
@@ -120,27 +111,61 @@ const Play = () => {
                     </>
                 ))}
             </Stack>
-            <Box
+
+            <Stack
+                spacing={2}
                 sx={{
                     position: "fixed",
-                    bottom: 0,
+                    bottom: "56px", // Height of the BottomNav component
                     left: 0,
                     right: 0,
-                    padding: "2rem",
-                    display: "flex",
-                    justifyContent: "space-between",
+                    backgroundColor: "background.paper",
+                    boxShadow: 3,
+                    zIndex: 10,
+                    maxWidth: "700px",
+                    margin: "0 auto",
+                    padding: "1rem",
+                    borderBottom: "1px solid #e0e0e0",
                 }}
             >
-                <Button variant="contained" color="primary" onClick={() => onChangeHole(-1)}>
-                    <ArrowBack />
-                </Button>
-                <Typography variant="h4" textAlign="center">
-                    Hole {game.currentHole}
-                </Typography>
-                <Button variant="contained" color="primary" onClick={() => onChangeHole(1)}>
-                    {game.currentHole === game.holes.length ? "Finish" : <Add />}
-                </Button>
-            </Box>
+                <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
+                    <Typography variant="h4">Par {game.holes[game.currentHole - 1].par}</Typography>
+                    <Stack direction="row" spacing={2} alignItems="center">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => onChangePar(-1)}
+                            sx={{ minWidth: "40px", width: "40px", height: "40px", padding: 0 }}
+                        >
+                            <Remove />
+                        </Button>
+                        <Button
+                            sx={{ minWidth: "40px", width: "40px", height: "40px", padding: 0 }}
+                            variant="contained"
+                            color="primary"
+                            onClick={() => onChangePar(1)}
+                        >
+                            <Add />
+                        </Button>
+                    </Stack>
+                </Stack>
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <Button variant="contained" color="primary" onClick={() => onChangeHole(-1)}>
+                        <ArrowBack />
+                    </Button>
+                    <Typography variant="h4" textAlign="center">
+                        Hole {game.currentHole}
+                    </Typography>
+                    <Button variant="contained" color="primary" onClick={() => onChangeHole(1)}>
+                        {game.currentHole === game.holes.length ? "Finish" : <ArrowForward />}
+                    </Button>
+                </Box>
+            </Stack>
         </>
     );
 };

@@ -33,10 +33,15 @@ function App() {
                 </Button>
             </div>
             <Stack spacing={2} sx={{ width: "100%", marginTop: 4 }}>
-                <Typography variant="h5" textAlign="center">
-                    Recent Games
-                </Typography>
                 <Stack spacing={2}>
+                    <Stack direction="row" justifyContent="space-between">
+                        <Typography variant="h5" textAlign="center">
+                            Recent Games
+                        </Typography>
+                        <Button variant="outlined" color="primary" onClick={() => navigate("/all-games")}>
+                            View all games
+                        </Button>
+                    </Stack>
                     {recentGames?.map((game) => (
                         <GameCard
                             key={game._id}
@@ -44,9 +49,6 @@ function App() {
                             onNavigate={() => navigate(`/game/results/${game._id}`)}
                         />
                     ))}
-                    <Button variant="contained" color="primary" onClick={() => navigate("/all-games")}>
-                        View all games
-                    </Button>
                 </Stack>
             </Stack>
         </>

@@ -16,7 +16,19 @@ export default function BottomNav() {
     };
 
     return (
-        <Box sx={{ width: "100%", position: "absolute", bottom: 0 }}>
+        <Box
+            sx={{
+                width: "100%",
+                boxShadow: 3,
+                position: "fixed",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                zIndex: 1000,
+                maxWidth: "700px",
+                margin: "0 auto",
+            }}
+        >
             <BottomNavigation showLabels value={pathname} onChange={onClick}>
                 <BottomNavigationAction label="Home" value="/" icon={<HomeIcon />} />
                 <BottomNavigationAction label="Latest" value="/latest" icon={<NotificationsIcon />} />

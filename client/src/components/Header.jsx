@@ -1,23 +1,23 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { useLocation, matchPath } from "react-router-dom";
+import ROUTES from "../routes";
 
-const TITLE_MAP = {
-    "/": "DG Tracker",
-    "/game": "New Game",
-    "/game/player": "New Game",
-};
-
-const Header = ({ title }) => {
+const Header = () => {
     const location = useLocation();
-
-    const pathname = location.pathname;
     const theme = useTheme();
     const backgroundColor = theme.palette.primary.main;
+
+    const getTitle = () => {
+        const match = ROUTES.find((route) =>
+            matchPath({ path: route.path, end: !route.path.includes("*") }, location.pathname),
+        );
+        return match?.title || "DG Tracker";
+    };
 
     return (
         <Box sx={{ backgroundColor, padding: "2rem" }}>
             <Typography variant="h3" textAlign="center" color="white">
-                {TITLE_MAP[pathname]}
+                {getTitle()}
             </Typography>
         </Box>
     );
