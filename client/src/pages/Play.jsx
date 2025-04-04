@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Add, Remove, ArrowBack, ArrowForward } from "@mui/icons-material";
 import TopBar from "../components/TopBar";
 import Header from "../components/Header";
+import api from "../utils/api";
 
 const Play = () => {
     const { id } = useParams();
@@ -11,27 +12,20 @@ const Play = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`/api/game/${id}`)
-            .then((res) => res.json())
+        api.get(`/api/game/${id}`)
             .then((data) => {
                 setGame(data);
-            });
+            })
+            .catch((error) => console.error("Error fetching game:", error));
     }, [id]);
 
     const onChangeHole = async (direction) => {
         if (game.currentHole === game.holes.length && direction === 1) {
-            navigate(`/game/results/${game._id}?back=game/play/${game._id}&finish=true`);
+            navigate(`/game/results/${game._id}?finish=true`);
             return;
         }
         try {
-            const res = await fetch(`/api/game/${game._id}/hole`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ direction }),
-            });
-            const data = await res.json();
+            const data = await api.put(`/api/game/${game._id}/hole`, { direction });
             setGame(data);
         } catch (error) {
             console.error(error);
@@ -57,13 +51,7 @@ const Play = () => {
         const oldGame = { ...game };
         updateScore(playerID, direction);
         try {
-            await fetch(`/api/game/${game._id}/${playerID}/stroke`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ stroke: direction }),
-            });
+            await api.put(`/api/game/${game._id}/${playerID}/stroke`, { stroke: direction });
         } catch (error) {
             console.error(error);
             // Revert the optimistic update
@@ -83,13 +71,7 @@ const Play = () => {
         setGame(newGame);
 
         try {
-            await fetch(`/api/game/${game._id}/hole/${game.currentHole}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ par: newPar }),
-            });
+            await api.put(`/api/game/${game._id}/hole/${game.currentHole}`, { par: newPar });
         } catch (error) {
             console.error(error);
             setGame(oldGame);

@@ -1,19 +1,27 @@
 import HomeIcon from "@mui/icons-material/Home";
 import PlusIcon from "@mui/icons-material/Add";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import Box from "@mui/material/Box";
 import * as React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import useUser from "../hooks/useUser";
 
 export default function BottomNav() {
     const { pathname } = useLocation();
     const navigate = useNavigate();
+    const { isAuthenticated, loading } = useUser();
 
     const onClick = (event, newValue) => {
         navigate(newValue);
     };
+
+    // Don't render the navigation if user is not authenticated or auth is still loading
+    if (!isAuthenticated && !loading) {
+        return null;
+    }
 
     return (
         <Box
@@ -33,6 +41,7 @@ export default function BottomNav() {
                 <BottomNavigationAction label="Home" value="/" icon={<HomeIcon />} />
                 <BottomNavigationAction label="Latest" value="/latest" icon={<NotificationsIcon />} />
                 <BottomNavigationAction label="New Game" value="/game" icon={<PlusIcon />} />
+                <BottomNavigationAction label="Account" value="/account" icon={<AccountCircleIcon />} />
             </BottomNavigation>
         </Box>
     );

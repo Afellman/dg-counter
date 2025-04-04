@@ -16,6 +16,7 @@ import Header from "../components/Header";
 import { Remove } from "@mui/icons-material";
 import GameCard from "../components/GameCard";
 import Layout from "../components/Layout";
+import api from "../utils/api";
 
 // List of 100 fantasy-themed game names
 const fantasyGameNames = [
@@ -135,16 +136,17 @@ const Game = () => {
     };
 
     const startGame = async () => {
-        const newGame = await fetch("/api/game", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ players, gameName, holes, courseName }),
-        });
-        const game = await newGame.json();
-
-        navigate(`/game/play/${game._id}`);
+        try {
+            const game = await api.post("/api/game", {
+                players,
+                gameName,
+                holes,
+                courseName,
+            });
+            navigate(`/game/play/${game._id}`);
+        } catch (error) {
+            console.error("Error creating game:", error);
+        }
     };
 
     const onGenerateGameName = async () => {

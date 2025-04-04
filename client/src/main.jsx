@@ -1,6 +1,6 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
-import { StrictMode } from "react";
+import { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthWrapper from "./components/AuthWrapper.jsx";
@@ -16,11 +16,13 @@ createRoot(document.getElementById("root")).render(
             <BrowserRouter>
                 <Layout>
                     <AuthWrapper>
-                        <Routes>
-                            {ROUTES.map((route) => (
-                                <Route key={route.path} path={route.path} element={<route.element />} />
-                            ))}
-                        </Routes>
+                        <Suspense fallback={<div>Loading...</div>}>
+                            <Routes>
+                                {ROUTES.map((route) => (
+                                    <Route key={route.path} path={route.path} element={<route.element />} />
+                                ))}
+                            </Routes>
+                        </Suspense>
                     </AuthWrapper>
                 </Layout>
             </BrowserRouter>

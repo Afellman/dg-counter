@@ -1,25 +1,37 @@
-import express from "express";
-import User from "../models/UserModel.js";
-import nodemailer from "nodemailer";
-import jwt from "jsonwebtoken";
 import cryptoRandomString from "crypto-random-string";
+import express from "express";
+import jwt from "jsonwebtoken";
+import { Resend } from "resend";
 import { JWT_EXPIRATION } from "../const.js";
+import User from "../models/UserModel.js";
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key"; // Should be set in .env
 
 // Configure email transporter
 let transporter;
+console.log(process.env);
 if (process.env.NODE_ENV === "production") {
-    // Configure production email service like SendGrid, Mailgun, etc.
-    // This is just a placeholder
-    transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
+    // Use Resend for production emails
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    transporter = {
+        sendMail: async (mailOptions) => {
+            try {
+                await resend.emails.send({
+                    from: process.env.FROM_EMAIL || "onboarding@resend.dev",
+                    to: mailOptions.to,
+                    subject: mailOptions.subject,
+                    html: mailOptions.html,
+                    text: mailOptions.text,
+                });
+                console.log(`Email sent successfully to ${mailOptions.to}`);
+            } catch (error) {
+                console.error("Error sending email via Resend:", error);
+                throw error;
+            }
         },
-    });
+    };
 } else {
     // For development, log to console
     transporter = {
@@ -60,16 +72,13 @@ router.post("/login", async (req, res) => {
         user.magicLinkExpiry = expiry;
         await user.save();
 
-        // Generate magic link URL
-        // Determine the base URL based on environment
-        let baseUrl;
-        if (process.env.NODE_ENV === "production") {
-            // Use the request's protocol and host in production
-            baseUrl = `${req.protocol}://${req.get("host")}`;
-        } else {
-            // Use the frontend development URL in development
-            baseUrl = "http://localhost:5173";
-        }
+        // Generate magic link URL using BASE_URL environment variable
+        const baseUrl =
+            process.env.BASE_URL ||
+            (process.env.NODE_ENV === "production"
+                ? `${req.protocol}://${req.get("host")}`
+                : "http://localhost:5173");
+
         const magicLink = `${baseUrl}/api/auth/verify?token=${token}`;
 
         // Send email
@@ -97,31 +106,40 @@ router.get("/verify", async (req, res) => {
         const { token } = req.query;
 
         if (!token) {
+            console.error("Verification error: No token provided");
             return res.status(400).send("Invalid or missing token");
         }
 
+        console.log("Looking for user with magic link token:", token);
         const user = await User.findOne({
             magicLinkToken: token,
             magicLinkExpiry: { $gt: new Date() },
         });
 
         if (!user) {
+            console.error("Verification error: User not found or token expired");
             return res.status(400).send("Invalid or expired link");
         }
 
+        console.log("User found:", user.email);
+
         // Generate JWT token
         const jwtToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION });
+        console.log("JWT token generated successfully");
 
         // Update user data
         user.magicLinkToken = null;
         user.magicLinkExpiry = null;
         user.lastLogin = new Date();
         await user.save();
+        console.log("User updated, magic link token cleared");
 
         // Redirect to frontend with token
-        res.redirect(`/?token=${jwtToken}`);
+        const redirectUrl = `/?token=${jwtToken}`;
+        console.log("Redirecting to:", redirectUrl);
+        res.redirect(redirectUrl);
     } catch (error) {
-        console.error("Verification error:", error);
+        console.error("Verification error details:", error);
         res.status(500).send("Server error");
     }
 });
@@ -132,24 +150,32 @@ router.post("/verify-token", async (req, res) => {
         const { token } = req.body;
 
         if (!token) {
+            console.log("Token verification failed: No token provided");
             return res.status(401).json({ authenticated: false });
         }
 
-        const decoded = jwt.verify(token, JWT_SECRET);
-        const user = await User.findById(decoded.userId);
+        try {
+            const decoded = jwt.verify(token, JWT_SECRET);
+            const user = await User.findById(decoded.userId);
 
-        if (!user) {
-            return res.status(401).json({ authenticated: false });
+            if (!user) {
+                console.log("Token verification failed: User not found");
+                return res.status(401).json({ authenticated: false });
+            }
+
+            console.log("Token verification successful for user:", user.email);
+            res.status(200).json({
+                authenticated: true,
+                user: {
+                    id: user._id,
+                    email: user.email,
+                    name: user.name,
+                },
+            });
+        } catch (jwtError) {
+            console.log("JWT verification failed:", jwtError.message);
+            return res.status(401).json({ authenticated: false, error: jwtError.message });
         }
-
-        res.status(200).json({
-            authenticated: true,
-            user: {
-                id: user._id,
-                email: user.email,
-                name: user.name,
-            },
-        });
     } catch (error) {
         console.error("Token verification error:", error);
         res.status(401).json({ authenticated: false });

@@ -1,27 +1,13 @@
-import { Box, Container, Typography, Button, Menu, MenuItem } from "@mui/material";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Box, Container, Typography } from "@mui/material";
+import { useLocation } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { useState } from "react";
 
-const TopBar = ({ back }) => {
-    const navigate = useNavigate();
+const TopBar = () => {
     const location = useLocation();
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem("authToken");
-        window.location.reload();
-        handleClose();
+    const handleBack = () => {
+        // Always use browser's native back functionality
+        window.history.back();
     };
 
     return (
@@ -34,34 +20,10 @@ const TopBar = ({ back }) => {
                 }}
             >
                 {location.pathname !== "/" && (
-                    <ArrowBackIosIcon
-                        style={{ cursor: "pointer" }}
-                        onClick={() => navigate(`/${back ? back : ""}`)}
-                    />
+                    <ArrowBackIosIcon style={{ cursor: "pointer" }} onClick={handleBack} />
                 )}
                 <Typography variant="h6">DG Tracker</Typography>
-                <Button
-                    id="account-button"
-                    aria-controls={open ? "account-menu" : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? "true" : undefined}
-                    onClick={handleClick}
-                    color="inherit"
-                    startIcon={<AccountCircleIcon />}
-                >
-                    Account
-                </Button>
-                <Menu
-                    id="account-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    MenuListProps={{
-                        "aria-labelledby": "account-button",
-                    }}
-                >
-                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                </Menu>
+                <Box sx={{ width: 24 }}></Box> {/* Empty space to balance the layout */}
             </Box>
         </Container>
     );
