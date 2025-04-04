@@ -1,9 +1,16 @@
-const express = require("express");
-const router = require("./routes");
-const winston = require("winston");
-const path = require("path");
-const { default: mongoose } = require("mongoose");
-require("dotenv").config();
+import express from "express";
+import router from "./routes/index.js";
+import winston from "winston";
+import path from "path";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8081;

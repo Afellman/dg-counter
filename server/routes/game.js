@@ -1,5 +1,7 @@
-const router = require("express").Router();
-const Game = require("../models/GameModel");
+import express from "express";
+import Game from "../models/GameModel.js";
+
+const router = express.Router();
 
 router.get("/all", async (req, res) => {
     const games = await Game.find();
@@ -86,4 +88,4 @@ router.put("/:id/", async (req, res) => {
     res.send(dbGame);
 });
 
-module.exports = router;
+export default router;

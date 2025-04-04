@@ -1,7 +1,9 @@
-const gameRouter = require("./game");
-const express = require("express");
+import gameRouter from "./game.js";
+import authRouter from "./auth.js";
+import express from "express";
 
 const router = express.Router();
 router.use("/game", gameRouter);
+router.use("/auth", authRouter);
 
-module.exports = router;
+export default router;

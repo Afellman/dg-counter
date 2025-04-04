@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const gameSchema = new mongoose.Schema({
     players: [
@@ -40,4 +40,4 @@ const gameSchema = new mongoose.Schema({
 gameSchema.set("timestamps", true);
 const Game = mongoose.model("Game", gameSchema);
 
-module.exports = Game;
+export default Game;
