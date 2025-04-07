@@ -1,17 +1,16 @@
-import { Button, Paper, Stack, Typography, Chip, Box, Avatar } from "@mui/material";
-import { ArrowForwardIos, Person, Flag, EmojiEvents } from "@mui/icons-material";
+import { EmojiEvents, Flag, Person } from "@mui/icons-material";
+import { Avatar, Box, Button, Chip, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import useUser from "../hooks/useUser";
-const GameCard = ({ game, showUser, onNavigate }) => {
+
+const GameCard = ({ game, showUser }) => {
     const navigate = useNavigate();
-    const { user } = useUser();
+    const { userID } = useUser();
 
     const onClick = () => {
-        if (onNavigate) {
-            onNavigate();
-        } else if (game.currentHole === game.holes.length) {
+        if (game.currentHole === game.holes.length) {
             navigate(`/game/results/${game._id}`);
-        } else {
+        } else if (userID === game.userId._id) {
             navigate(`/game/play/${game._id}`);
         }
     };
@@ -58,7 +57,7 @@ const GameCard = ({ game, showUser, onNavigate }) => {
             </Box>
 
             {/* Middle Section */}
-            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+            <Box sx={{ gap: 1, display: "flex", justifyContent: "space-between", mb: 1 }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Flag fontSize="small" color="primary" />
                     <Typography variant="body2">{game.holes.length} holes</Typography>
@@ -73,17 +72,7 @@ const GameCard = ({ game, showUser, onNavigate }) => {
                     </Box>
                 )}
 
-                {!isComplete && game.userId === user.id && (
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        size="small"
-                        onClick={onClick}
-                        sx={{ ml: "auto" }}
-                    >
-                        Continue
-                    </Button>
-                )}
+                {/*  */}
             </Box>
 
             {/* Players Section */}

@@ -46,12 +46,12 @@ function App() {
 
     return (
         <>
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", position: "absolute", bottom: 75, right: 16 }}>
                 <Button
                     sx={{ flex: 1 }}
                     size="large"
                     variant="contained"
-                    color="success"
+                    color="warning"
                     onClick={() => {
                         navigate("/game");
                     }}
@@ -60,7 +60,7 @@ function App() {
                 </Button>
             </div>
 
-            <Tabs value={activeTab} onChange={handleTabChange} variant="fullWidth" sx={{ mt: 2 }}>
+            <Tabs value={activeTab} onChange={handleTabChange} variant="fullWidth">
                 <Tab label="My Games" />
                 <Tab label="All Games" />
             </Tabs>
@@ -80,13 +80,7 @@ function App() {
                         {personalGames.length === 0 ? (
                             <Typography variant="body1">You haven't created any games yet.</Typography>
                         ) : (
-                            personalGames.map((game) => (
-                                <GameCard
-                                    key={game._id}
-                                    game={game}
-                                    onNavigate={() => navigate(`/game/results/${game._id}`)}
-                                />
-                            ))
+                            personalGames.map((game) => <GameCard key={game._id} game={game} />)
                         )}
                     </Stack>
                 ) : (
@@ -105,12 +99,7 @@ function App() {
                             </Button>
                         </Stack>
                         {recentGames.map((game) => (
-                            <GameCard
-                                key={game._id}
-                                game={game}
-                                onNavigate={() => navigate(`/game/results/${game._id}`)}
-                                showUser={true}
-                            />
+                            <GameCard key={game._id} game={game} showUser={true} />
                         ))}
                     </Stack>
                 )}

@@ -1,9 +1,18 @@
-import { Box, Container, Typography } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { Box, Container, Typography, useTheme } from "@mui/material";
+import { matchPath, useLocation } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ROUTES from "../routes";
 
 const TopBar = () => {
     const location = useLocation();
+    const theme = useTheme();
+
+    const getTitle = () => {
+        const match = ROUTES.find((route) =>
+            matchPath({ path: route.path, end: !route.path.includes("*") }, location.pathname),
+        );
+        return match?.title || "DG Tracker";
+    };
 
     const handleBack = () => {
         // Always use browser's native back functionality
@@ -11,7 +20,19 @@ const TopBar = () => {
     };
 
     return (
-        <Container sx={{ paddingTop: "0.5rem", paddingBottom: "0.5rem" }}>
+        <Container
+            sx={{
+                paddingTop: "0.5rem",
+                paddingBottom: "0.5rem",
+                boxShadow: 1,
+                position: "fixed",
+                top: 0,
+                backgroundColor: theme.palette.primary.main,
+                color: "#fff",
+                zIndex: 1,
+                // backdropFilter: "blur(10px);",
+            }}
+        >
             <Box
                 sx={{
                     display: "flex",
@@ -22,7 +43,7 @@ const TopBar = () => {
                 {location.pathname !== "/" && (
                     <ArrowBackIosIcon style={{ cursor: "pointer" }} onClick={handleBack} />
                 )}
-                <Typography variant="h6">DG Tracker</Typography>
+                <Typography variant="h6">{getTitle()}</Typography>
                 <Box sx={{ width: 24 }}></Box> {/* Empty space to balance the layout */}
             </Box>
         </Container>

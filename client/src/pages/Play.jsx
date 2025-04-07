@@ -110,24 +110,24 @@ const Play = () => {
                     borderBottom: "1px solid #e0e0e0",
                 }}
             >
-                <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
+                <Stack direction="row" spacing={2} alignItems="center">
                     <Typography variant="h4">Par {game.holes[game.currentHole - 1].par}</Typography>
                     <Stack direction="row" spacing={2} alignItems="center">
                         <Button
-                            variant="contained"
-                            color="primary"
+                            variant="outlined"
+                            color="secondary"
                             onClick={() => onChangePar(-1)}
-                            sx={{ minWidth: "40px", width: "40px", height: "40px", padding: 0 }}
+                            sx={{ minWidth: "35px", width: "35px", height: "35px", padding: 0 }}
                         >
-                            <Remove />
+                            <Remove fontSize="small" />
                         </Button>
                         <Button
-                            sx={{ minWidth: "40px", width: "40px", height: "40px", padding: 0 }}
-                            variant="contained"
-                            color="primary"
+                            sx={{ minWidth: "35px", width: "35px", height: "35px", padding: 0 }}
+                            variant="outlined"
+                            color="secondary"
                             onClick={() => onChangePar(1)}
                         >
-                            <Add />
+                            <Add fontSize="small" />
                         </Button>
                     </Stack>
                 </Stack>
@@ -137,13 +137,13 @@ const Play = () => {
                         justifyContent: "space-between",
                     }}
                 >
-                    <Button variant="contained" color="primary" onClick={() => onChangeHole(-1)}>
+                    <Button color="secondary" style={{ borderRadius: 50 }} onClick={() => onChangeHole(-1)}>
                         <ArrowBack />
                     </Button>
                     <Typography variant="h4" textAlign="center">
                         Hole {game.currentHole}
                     </Typography>
-                    <Button variant="contained" color="primary" onClick={() => onChangeHole(1)}>
+                    <Button color="secondary" onClick={() => onChangeHole(1)}>
                         {game.currentHole === game.holes.length ? "Finish" : <ArrowForward />}
                     </Button>
                 </Box>
@@ -172,7 +172,13 @@ const PlayerTicks = ({ game, player, onChangeStroke }) => {
                         variant="contained"
                         color="primary"
                         onClick={() => onChangeStroke(player._id, -1)}
-                        sx={{ minWidth: "40px", width: "40px", height: "40px", padding: 0 }}
+                        sx={{
+                            borderRadius: "50%",
+                            minWidth: "40px",
+                            width: "40px",
+                            height: "40px",
+                            padding: 0,
+                        }}
                     >
                         <Remove />
                     </Button>
@@ -180,7 +186,13 @@ const PlayerTicks = ({ game, player, onChangeStroke }) => {
                         {player.scores.find((s) => s.hole === game.currentHole)?.strokes || 0}
                     </Typography>
                     <Button
-                        sx={{ minWidth: "40px", width: "40px", height: "40px", padding: 0 }}
+                        sx={{
+                            borderRadius: "50%",
+                            minWidth: "40px",
+                            width: "40px",
+                            height: "40px",
+                            padding: 0,
+                        }}
                         variant="contained"
                         color="primary"
                         onClick={() => onChangeStroke(player._id, 1)}

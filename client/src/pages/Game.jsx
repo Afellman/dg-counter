@@ -183,8 +183,7 @@ const Game = () => {
                             onChange={(e) => setPlayerName(e.target.value)}
                         />
                         <Button
-                            variant="contained"
-                            color="primary"
+                            variant="outlined"
                             disabled={playerName === ""}
                             onClick={() => {
                                 addPlayer();

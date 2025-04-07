@@ -1,9 +1,9 @@
 import { Button, Container, Stack, Typography } from "@mui/material";
 import Layout from "../components/Layout";
-import useUser from "../hooks/useUser";
+import useAuth from "../hooks/useAuth";
 
 const Account = () => {
-    const { user, logout } = useUser();
+    const { user, logout } = useAuth();
 
     const handleLogout = () => {
         logout();

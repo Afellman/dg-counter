@@ -55,13 +55,7 @@ const AllGames = () => {
                     {personalGames.length === 0 ? (
                         <Typography variant="body1">You haven't created any games yet.</Typography>
                     ) : (
-                        personalGames.map((game) => (
-                            <GameCard
-                                key={game._id}
-                                game={game}
-                                onNavigate={() => navigate(`/game/results/${game._id}`)}
-                            />
-                        ))
+                        personalGames.map((game) => <GameCard key={game._id} game={game} />)
                     )}
                 </Stack>
             ) : (

@@ -10,7 +10,6 @@ const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key"; // Should be set
 
 // Configure email transporter
 let transporter;
-console.log(process.env);
 if (process.env.NODE_ENV === "production") {
     // Use Resend for production emails
     const resend = new Resend(process.env.RESEND_API_KEY);

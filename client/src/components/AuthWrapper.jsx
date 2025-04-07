@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
-import { Box, Typography, OutlinedInput, Button, Container, Stack, Alert } from "@mui/material";
-import Header from "./Header";
-import useUser from "../hooks/useUser";
+import { Alert, Box, Button, OutlinedInput, Stack, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import useAuth from "../hooks/useAuth";
 import api from "../utils/api";
 
 const AuthWrapper = ({ children }) => {
-    const { isAuthenticated, loading, setAuthToken } = useUser();
+    const { isAuthenticated, loading, verifyToken } = useAuth();
     const [email, setEmail] = useState("");
     const [magicLinkSent, setMagicLinkSent] = useState(false);
     const [error, setError] = useState("");
@@ -23,9 +22,12 @@ const AuthWrapper = ({ children }) => {
             setTokenProcessed(true);
 
             // Instead of reloading, notify the auth hook about the new token
-            setAuthToken(token);
+            verifyToken(token);
+        } else if (loading) {
+            const token = localStorage.getItem("authToken");
+            verifyToken(token);
         }
-    }, [tokenProcessed, setAuthToken]);
+    }, [tokenProcessed, verifyToken, loading]);
 
     const handleLogin = async () => {
         if (!email || !email.includes("@")) {
@@ -46,10 +48,7 @@ const AuthWrapper = ({ children }) => {
     if (loading) {
         return (
             <Stack spacing={2}>
-                <Header title="DG Tracker" />
-                <Container>
-                    <Typography>Loading...</Typography>
-                </Container>
+                <Typography>Loading...</Typography>
             </Stack>
         );
     }

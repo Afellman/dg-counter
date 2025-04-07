@@ -1,7 +1,7 @@
-import HomeIcon from "@mui/icons-material/Home";
-import PlusIcon from "@mui/icons-material/Add";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import PlusIcon from "@mui/icons-material/Add";
+import HomeIcon from "@mui/icons-material/Home";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import Box from "@mui/material/Box";
@@ -19,7 +19,7 @@ export default function BottomNav() {
     };
 
     // Don't render the navigation if user is not authenticated or auth is still loading
-    if (!isAuthenticated && !loading) {
+    if (!isAuthenticated || loading) {
         return null;
     }
 
