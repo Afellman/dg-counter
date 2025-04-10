@@ -43,7 +43,7 @@ const TopBar = () => {
                 {location.pathname !== "/" && (
                     <ArrowBackIosIcon style={{ cursor: "pointer" }} onClick={handleBack} />
                 )}
-                <Typography variant="h6">{getTitle()}</Typography>
+                <Typography variant="h5">{getTitle()}</Typography>
                 <Box sx={{ width: 24 }}></Box> {/* Empty space to balance the layout */}
             </Box>
         </Container>

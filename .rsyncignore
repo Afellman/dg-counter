@@ -1,0 +1,26 @@
+# Ignore node_modules
+
+node_modules/
+
+# Ignore logs
+
+\*.log
+
+# Ignore build artifacts
+
+dist/
+
+# Ignore temporary files
+
+\*.tmp
+
+# Ignore Git files
+
+.git/
+
+# Ignore IDE files
+
+_.swp
+_.swo
+.idea/
+.vscode/

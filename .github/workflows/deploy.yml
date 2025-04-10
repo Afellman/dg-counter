@@ -1,0 +1,49 @@
+name: Deploy to Server
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "16"
+
+            - name: Install dependencies
+              run: |
+                  cd server
+                  npm install
+
+            - name: Build project
+              run: |
+                  cd server
+                  npm run build
+
+            - name: Deploy to server
+              env:
+                  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+                  SERVER_HOST: ${{ secrets.SERVER_HOST }}
+                  SERVER_PATH: ${{ secrets.SERVER_PATH }}
+              run: |
+                  mkdir -p ~/.ssh
+                  echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+                  chmod 600 ~/.ssh/id_rsa
+
+                  # Deploy to a temporary directory
+                  TEMP_DEPLOY_DIR="$SERVER_PATH/releases/$(date +%Y%m%d%H%M%S)"
+                  rsync -av --exclude-from=.rsyncignore -e "ssh -o StrictHostKeyChecking=no" ./ $SERVER_HOST:$TEMP_DEPLOY_DIR
+
+                  # Update the current symlink
+                  ssh -o StrictHostKeyChecking=no $SERVER_HOST "ln -sfn $TEMP_DEPLOY_DIR $SERVER_PATH/current && cd $SERVER_PATH/current && npm install && pm2 reload ecosystem.config.js"
+
+                  # Cleanup old releases
+                  ssh -o StrictHostKeyChecking=no $SERVER_HOST "cd $SERVER_PATH/releases && ls -t | tail -n +6 | xargs rm -rf"

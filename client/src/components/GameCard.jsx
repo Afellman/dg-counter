@@ -1,16 +1,34 @@
 import { EmojiEvents, Flag, Person } from "@mui/icons-material";
-import { Avatar, Box, Button, Chip, Paper, Typography } from "@mui/material";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import {
+    Alert,
+    Avatar,
+    Box,
+    Chip,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText,
+    Paper,
+    Popover,
+    Snackbar,
+    Typography,
+} from "@mui/material";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useUser from "../hooks/useUser";
+import api from "../utils/api";
 
-const GameCard = ({ game, showUser }) => {
+const GameCard = ({ game, showUser, onDelete }) => {
+    const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate();
     const { userID } = useUser();
+    const [snack, setSnack] = useState(null);
 
     const onClick = () => {
         if (game.currentHole === game.holes.length) {
             navigate(`/game/results/${game._id}`);
-        } else if (userID === game.userId._id) {
+        } else if (userID === game.user._id) {
             navigate(`/game/play/${game._id}`);
         }
     };
@@ -18,6 +36,34 @@ const GameCard = ({ game, showUser }) => {
     // Calculate if game is complete
     const isComplete = game.currentHole === game.holes.length;
 
+    const handleOpenPopover = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setAnchorEl(e.currentTarget);
+    };
+
+    const handleClosePopover = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+    const id = open ? "simple-popover" : undefined;
+
+    const handleDelete = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const res = await api.delete(`/api/game/${game._id}`);
+
+        if (res.status !== 200) {
+            console.log("error deleting game");
+            setSnack({ msg: "Error deleting game", type: "error" });
+        } else {
+            setSnack({ msg: "Game deleted", type: "success" });
+        }
+    };
     return (
         <Paper
             elevation={2}
@@ -31,19 +77,37 @@ const GameCard = ({ game, showUser }) => {
             }}
         >
             {/* Header Section */}
+            <Box display={"flex"} justifyContent={"space-between"} alignItems="center">
+                <Typography variant="caption" color="text.secondary">
+                    {new Date(game.createdAt).toLocaleDateString()}
+                </Typography>
+
+                {game.user._id === userID && <MoreHorizIcon color="action" onClick={handleOpenPopover} />}
+                <Popover
+                    id={id}
+                    open={open}
+                    anchorEl={anchorEl}
+                    onClose={handleClosePopover}
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                    }}
+                >
+                    <List disablePadding>
+                        <ListItem disablePadding>
+                            <ListItemButton>
+                                <ListItemText primary="Delete" onClick={handleDelete} />
+                            </ListItemButton>
+                        </ListItem>
+                    </List>
+                </Popover>
+            </Box>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Typography variant="h6" sx={{ fontWeight: "medium" }}>
                         {game.gameName}
                     </Typography>
-                    {isComplete ? (
-                        <Chip
-                            size="small"
-                            color="success"
-                            label="Complete"
-                            icon={<EmojiEvents fontSize="small" />}
-                        />
-                    ) : (
+                    {!isComplete && (
                         <Chip
                             size="small"
                             color="warning"
@@ -51,9 +115,6 @@ const GameCard = ({ game, showUser }) => {
                         />
                     )}
                 </Box>
-                <Typography variant="caption" color="text.secondary">
-                    {new Date(game.createdAt).toLocaleDateString()}
-                </Typography>
             </Box>
 
             {/* Middle Section */}
@@ -63,16 +124,14 @@ const GameCard = ({ game, showUser }) => {
                     <Typography variant="body2">{game.holes.length} holes</Typography>
                 </Box>
 
-                {showUser && game.userId && (
+                {showUser && game.user && (
                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                         <Person fontSize="small" color="action" />
                         <Typography variant="body2" color="text.secondary">
-                            {game.userId.name || game.userId.email.split("@")[0]}
+                            {game.user.name || game.user.email.split("@")[0]}
                         </Typography>
                     </Box>
                 )}
-
-                {/*  */}
             </Box>
 
             {/* Players Section */}
@@ -99,6 +158,11 @@ const GameCard = ({ game, showUser }) => {
                     />
                 ))}
             </Box>
+            <Snackbar open={!!snack} autoHideDuration={4000} onClose={() => setSnack(null)}>
+                <Alert severity={snack?.type} variant="filled" sx={{ width: "100%" }}>
+                    {snack?.msg}
+                </Alert>
+            </Snackbar>
         </Paper>
     );
 };

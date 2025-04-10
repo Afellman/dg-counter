@@ -1,8 +1,7 @@
-import { Stack, Typography, Tabs, Tab } from "@mui/material";
+import { Stack, Tab, Tabs, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import GameCard from "../components/GameCard";
-import Layout from "../components/Layout";
 import api from "../utils/api";
 
 const AllGames = () => {
@@ -17,21 +16,21 @@ const AllGames = () => {
         return tabParam ? parseInt(tabParam, 10) : 0;
     });
 
+    const fetchGames = async () => {
+        try {
+            // Fetch all public games
+            const publicData = await api.get("/api/game/all");
+            setGames(publicData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+
+            // Fetch personal games
+            const personalData = await api.get("/api/game/my-games");
+            setPersonalGames(personalData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+        } catch (error) {
+            console.error("Error fetching games:", error);
+        }
+    };
+
     useEffect(() => {
-        const fetchGames = async () => {
-            try {
-                // Fetch all public games
-                const publicData = await api.get("/api/game/all");
-                setGames(publicData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-
-                // Fetch personal games
-                const personalData = await api.get("/api/game/my-games");
-                setPersonalGames(personalData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-            } catch (error) {
-                console.error("Error fetching games:", error);
-            }
-        };
-
         fetchGames();
     }, []);
 
@@ -55,7 +54,9 @@ const AllGames = () => {
                     {personalGames.length === 0 ? (
                         <Typography variant="body1">You haven't created any games yet.</Typography>
                     ) : (
-                        personalGames.map((game) => <GameCard key={game._id} game={game} />)
+                        personalGames.map((game) => (
+                            <GameCard onDelete={fetchGames} key={game._id} game={game} />
+                        ))
                     )}
                 </Stack>
             ) : (
@@ -64,6 +65,7 @@ const AllGames = () => {
                     <Typography variant="h5">All Games</Typography>
                     {games.map((game) => (
                         <GameCard
+                            onDelete={fetchGames}
                             key={game._id}
                             game={game}
                             showUser={true}

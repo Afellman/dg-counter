@@ -45,7 +45,9 @@ app.get("*", (req, res) => {
 });
 
 mongoose
-    .connect(process.env.MONGO_URI || "mongodb://localhost:27017/dg-tracker")
+    .connect(process.env.MONGO_URI || "mongodb://localhost:27017/dg-tracker", {
+        dbName: "dg-tracker",
+    })
     .then(() => {
         console.log("Connected to MongoDB");
         app.listen(PORT, () => {
