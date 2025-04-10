@@ -13,6 +13,7 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 8081;
 
+console.log(process.env);
 const logger = winston.createLogger({
     level: "info",
     format: winston.format.json(),
