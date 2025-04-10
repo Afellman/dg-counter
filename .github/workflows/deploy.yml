@@ -34,6 +34,17 @@ jobs:
                   cd server
                   npm run build
 
+            - name: Prepare server directories
+              env:
+                  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+                  SERVER_HOST: ${{ secrets.SERVER_HOST }}
+                  SERVER_PATH: ${{ secrets.SERVER_PATH }}
+              run: |
+                  mkdir -p ~/.ssh
+                  echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+                  chmod 600 ~/.ssh/id_rsa
+                  ssh -o StrictHostKeyChecking=no $SERVER_HOST "mkdir -p $SERVER_PATH/releases"
+
             - name: Deploy to server
               env:
                   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
