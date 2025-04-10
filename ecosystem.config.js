@@ -5,6 +5,7 @@ module.exports = {
             script: "server/server.js",
             instances: "max",
             exec_mode: "cluster",
+            cwd: "/var/www/dg-tracker/current",
             env: {
                 JWT_SECRET: process.env.JWT_SECRET,
                 RESEND_API_KEY: process.env.RESEND_API_KEY,

@@ -43,7 +43,7 @@ jobs:
                   mkdir -p ~/.ssh
                   echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
                   chmod 600 ~/.ssh/id_rsa
-                  ssh -o StrictHostKeyChecking=no $SERVER_HOST "mkdir -p $SERVER_PATH/releases"
+                  ssh -o StrictHostKeyChecking=no $SERVER_HOST "mkdir -p $SERVER_PATH/releases && mkdir -p $SERVER_PATH/current"
 
             - name: Deploy to server
               env:
