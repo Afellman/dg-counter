@@ -11,7 +11,7 @@ const TopBar = () => {
         const match = ROUTES.find((route) =>
             matchPath({ path: route.path, end: !route.path.includes("*") }, location.pathname),
         );
-        return match?.title || "DG Tracker";
+        return match?.title || "DG TRACKER";
     };
 
     const handleBack = () => {
