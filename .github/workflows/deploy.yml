@@ -59,8 +59,8 @@ jobs:
                   NODE_ENV: ${{ vars.NODE_ENV }}
                   FROM_EMAIL: ${{ vars.FROM_EMAIL }}
               run: |
-                  echo $SERVER_HOST
-                  echo $SERVER_PATH
+                  echo $FROM_EMAIL
+                  echo $MONGO_URI
                   mkdir -p ~/.ssh
                   echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
                   chmod 600 ~/.ssh/id_rsa
