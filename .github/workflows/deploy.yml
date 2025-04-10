@@ -23,9 +23,19 @@ jobs:
                   cd server
                   npm install
 
+            - name: Install client dependencies
+              run: |
+                  cd client
+                  npm install
+
             - name: Build project
               run: |
                   cd server
+                  npm run build
+
+            - name: Build client
+              run: |
+                  cd client
                   npm run build
 
             - name: Deploy to server
