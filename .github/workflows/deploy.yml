@@ -61,6 +61,7 @@ jobs:
               run: |
                   echo $FROM_EMAIL
                   echo $MONGO_URI
+                  echo $RESEND_API_KEY
                   mkdir -p ~/.ssh
                   echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
                   chmod 600 ~/.ssh/id_rsa
