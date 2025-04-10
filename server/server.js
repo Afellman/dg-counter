@@ -47,6 +47,8 @@ app.get("*", (req, res) => {
 mongoose
     .connect(process.env.MONGO_URI || "mongodb://localhost:27017/dg-tracker", {
         dbName: "dg-tracker",
+        user: process.env.MONGO_USER || "admin",
+        pass: process.env.MONGO_PASSWORD || "",
     })
     .then(() => {
         console.log("Connected to MongoDB");

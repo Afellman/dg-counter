@@ -50,6 +50,14 @@ jobs:
                   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
                   SERVER_HOST: ${{ secrets.SERVER_HOST }}
                   SERVER_PATH: ${{ secrets.SERVER_PATH }}
+                  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+                  RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+                  MONGO_USER: ${{ secrets.MONGO_USER }}
+                  MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+                  PORT: ${{ vars.PORT }}
+                  MONGO_URI: ${{ vars.MONGO_URI }}
+                  NODE_ENV: ${{ vars.NODE_ENV }}
+                  FROM_EMAIL: ${{ vars.FROM_EMAIL }}
               run: |
                   echo $SERVER_HOST
                   echo $SERVER_PATH
