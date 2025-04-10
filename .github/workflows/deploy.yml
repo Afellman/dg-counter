@@ -8,6 +8,7 @@ on:
 jobs:
     deploy:
         runs-on: ubuntu-latest
+        environment: production
 
         steps:
             - name: Checkout code
@@ -33,17 +34,14 @@ jobs:
                   cd server
                   npm run build
 
-            - name: Build client
-              run: |
-                  cd client
-                  npm run build
-
             - name: Deploy to server
               env:
                   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
                   SERVER_HOST: ${{ secrets.SERVER_HOST }}
                   SERVER_PATH: ${{ secrets.SERVER_PATH }}
               run: |
+                  echo $SERVER_HOST
+                  echo $SERVER_PATH
                   mkdir -p ~/.ssh
                   echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
                   chmod 600 ~/.ssh/id_rsa
