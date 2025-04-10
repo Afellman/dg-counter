@@ -66,8 +66,9 @@ jobs:
                   echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
                   chmod 600 ~/.ssh/id_rsa
 
-                  # Deploy to a temporary directory
-                  TEMP_DEPLOY_DIR="$SERVER_PATH/releases/$(date +%Y%m%d%H%M%S)"
+                  # Use GITHUB_RUN_NUMBER as the build number
+                  BUILD_NUMBER=${{ github.run_number }}
+                  TEMP_DEPLOY_DIR="$SERVER_PATH/releases/$BUILD_NUMBER"
                   rsync -av --exclude-from=.rsyncignore -e "ssh -o StrictHostKeyChecking=no" ./ $SERVER_HOST:$TEMP_DEPLOY_DIR
 
                   # Update the current symlink
