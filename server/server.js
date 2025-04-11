@@ -39,10 +39,12 @@ app.use((req, res, next) => {
 });
 
 app.use("/api", router);
-app.use(express.static(path.join(__dirname, "public")));
+// Update the static path to look at the project root's public directory
+app.use(express.static(path.join(__dirname, "..", "public")));
 
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
+    // Update the sendFile path to look at the project root's public directory
+    res.sendFile(path.join(__dirname, "..", "public", "index.html"));
 });
 
 mongoose
