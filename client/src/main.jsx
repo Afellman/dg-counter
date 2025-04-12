@@ -8,6 +8,7 @@ import Layout from "./components/Layout.jsx";
 import "./index.css";
 import theme from "./theme";
 import ROUTES from "./routes";
+import "./unregisterServiceWorkers.js";
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>
