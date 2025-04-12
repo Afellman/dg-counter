@@ -91,6 +91,9 @@ jobs:
                   # Verify .env was transferred to the server
                   ssh -o StrictHostKeyChecking=no $SERVER_HOST "ls -la $TEMP_DEPLOY_DIR/.env"
 
+                  # Create a version file
+                  ssh -o StrictHostKeyChecking=no $SERVER_HOST "echo $BUILD_NUMBER >> $TEMP_DEPLOY_DIR/public/version.txt"
+
                   # Update the current symlink
                   ssh -o StrictHostKeyChecking=no $SERVER_HOST "ln -sfn $TEMP_DEPLOY_DIR $SERVER_PATH/current && cd $SERVER_PATH/current && npm install && pm2 reload ecosystem.config.js"
 
