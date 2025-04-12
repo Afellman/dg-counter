@@ -42,6 +42,9 @@ app.use("/api", router);
 // Update the static path to look at the project root's public directory
 app.use(express.static(path.join(__dirname, "..", "public")));
 
+app.get("/api/system/version", (req, res) => {
+    res.sendFile(path.join(__dirname, "version.txt"));
+});
 app.get("*", (req, res) => {
     // Update the sendFile path to look at the project root's public directory
     res.sendFile(path.join(__dirname, "..", "public", "index.html"));
