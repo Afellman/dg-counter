@@ -70,6 +70,7 @@ router.post("/login", async (req, res) => {
         user.magicLinkToken = token;
         user.magicLinkExpiry = expiry;
         await user.save();
+        console.log(`Token ${token} set for user ${user.email}`);
 
         // Generate magic link URL using BASE_URL environment variable
         const baseUrl =
