@@ -154,7 +154,9 @@ router.post("/verify-token", async (req, res) => {
         }
 
         try {
+            console.log({ token, JWT_SECRET });
             const decoded = jwt.verify(token, JWT_SECRET);
+            console.log({ userID: decoded.userId });
             const user = await User.findById(decoded.userId);
 
             if (!user) {

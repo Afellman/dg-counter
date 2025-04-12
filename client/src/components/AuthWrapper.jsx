@@ -13,19 +13,19 @@ const AuthWrapper = ({ children }) => {
     useEffect(() => {
         // Check if there's a token in the URL (after magic link redirect)
         const params = new URLSearchParams(window.location.search);
-        const token = params.get("token");
+        const urlToken = params.get("token");
+        const lsToken = localStorage.getItem("authToken");
 
-        if (token && !tokenProcessed) {
+        if (urlToken && !tokenProcessed) {
             // Store token and remove it from URL
-            localStorage.setItem("authToken", token);
+            localStorage.setItem("authToken", urlToken);
             window.history.replaceState({}, document.title, window.location.pathname);
             setTokenProcessed(true);
 
             // Instead of reloading, notify the auth hook about the new token
-            verifyToken(token);
+            verifyToken(urlToken);
         } else if (loading) {
-            const token = localStorage.getItem("authToken");
-            verifyToken(token);
+            verifyToken(lsToken);
         }
     }, [tokenProcessed, verifyToken, loading]);
 
