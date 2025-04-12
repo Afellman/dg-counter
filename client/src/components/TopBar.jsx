@@ -30,6 +30,7 @@ const TopBar = () => {
                 backgroundColor: theme.palette.primary.main,
                 color: "#fff",
                 zIndex: 1,
+                maxWidth: "700px",
                 // backdropFilter: "blur(10px);",
             }}
         >

@@ -15,6 +15,7 @@ const Layout = ({ children }) => {
                     paddingTop: "58px",
                     paddingBottom: "16px",
                     minHeight: "calc(100dvh - 72px)",
+                    position: "relative",
                 }}
             >
                 {/* <Header /> */}

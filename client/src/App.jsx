@@ -1,11 +1,7 @@
-import { Box, Button, Container, Stack, Typography, Tabs, Tab } from "@mui/material";
-import TopBar from "./components/TopBar";
+import { Button, Container, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import GameCard from "./components/GameCard";
-import Header from "./components/Header";
-import BottomNav from "./components/BottomNav";
-import Layout from "./components/Layout";
 import api from "./utils/api";
 
 function App() {
@@ -46,19 +42,31 @@ function App() {
 
     return (
         <>
-            <div style={{ display: "flex", position: "absolute", bottom: 75, right: 16 }}>
-                <Button
-                    sx={{ flex: 1 }}
-                    size="large"
-                    variant="contained"
-                    color="warning"
-                    onClick={() => {
-                        navigate("/game");
-                    }}
-                >
-                    Start new game
-                </Button>
-            </div>
+            <Container
+                style={{
+                    display: "flex",
+                    position: "fixed",
+                    bottom: "74px",
+                    maxWidth: "700px",
+                    // marginLeft: "-24px",
+                    paddingRight: "32px",
+                    justifyContent: "end",
+                }}
+            >
+                <div>
+                    <Button
+                        sx={{ flex: 1 }}
+                        size="large"
+                        variant="contained"
+                        color="warning"
+                        onClick={() => {
+                            navigate("/game");
+                        }}
+                    >
+                        Start new game
+                    </Button>
+                </div>
+            </Container>
 
             <Tabs value={activeTab} onChange={handleTabChange} variant="fullWidth">
                 <Tab label="My Games" />
@@ -81,12 +89,7 @@ function App() {
                             <Typography variant="body1">You haven't created any games yet.</Typography>
                         ) : (
                             personalGames.map((game) => (
-                                <GameCard
-                                    onDelete={fetchGames}
-                                    onDelete={fetchGames}
-                                    key={game._id}
-                                    game={game}
-                                />
+                                <GameCard onDelete={fetchGames} key={game._id} game={game} />
                             ))
                         )}
                     </Stack>
