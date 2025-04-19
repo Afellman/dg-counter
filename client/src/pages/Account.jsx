@@ -19,7 +19,7 @@ const Account = () => {
     // Using your existing API utility to fetch user stats
     useEffect(() => {
         const fetchUserStats = async () => {
-            if (!user || !user.id) return;
+            if (!user || !user._id) return;
 
             setLoading(true);
             setError(null);

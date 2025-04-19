@@ -146,7 +146,7 @@ router.post("/verify-token", async (req, res) => {
             res.status(200).json({
                 authenticated: true,
                 user: {
-                    id: user._id,
+                    _id: user._id,
                     email: user.email,
                     name: user.name,
                 },
