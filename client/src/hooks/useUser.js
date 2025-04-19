@@ -11,7 +11,7 @@ const useUser = () => {
     return {
         ...auth,
         ...auth?.user,
-        userID: auth?.user?.id,
+        userID: auth?.user?._id,
     };
 };
 
