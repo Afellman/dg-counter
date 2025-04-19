@@ -5,47 +5,24 @@ const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key"; // Should be set
 
 // Basic middleware that attaches user to request if authenticated
 export const authMiddleware = async (req, res, next) => {
+    // Get token from header
+    const authHeader = req.header("Authorization");
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "No token, authorization denied" });
+    }
+
+    // Extract the token
+    const token = authHeader.substring(7);
+
+    // Verify token
     try {
-        // Get the token from the Authorization header
-        const authHeader = req.headers.authorization;
-        console.log(authHeader);
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            return res.status(401).json({ message: "Authentication required" });
-        }
-
-        const token = authHeader.split(" ")[1];
-
-        // Verify the token
         const decoded = jwt.verify(token, JWT_SECRET);
-
-        // Find the user
-        const user = await User.findById(decoded.userId);
-        if (!user) {
-            return res.status(401).json({ message: "User not found" });
-        }
-
-        // Add the user to the request object
-        req.user = {
-            id: user._id,
-            email: user.email,
-        };
-
+        req.userId = decoded.userId;
         next();
-    } catch (error) {
-        console.error("Auth middleware error:", error);
-        res.status(401).json({ message: "Authentication failed" });
+    } catch (err) {
+        res.status(401).json({ message: "Token is not valid" });
     }
 };
 
-// Middleware that checks if a route parameter ID matches the user's games
-export const requireOwnership = (req, res, next) => {
-    // Make sure user is authenticated first
-    if (!req.user) {
-        return res.status(401).json({ message: "Authentication required" });
-    }
-
-    // The route handler will check ownership based on the user ID
-    next();
-};
-
-export default { authMiddleware, requireOwnership };
+export default { authMiddleware };

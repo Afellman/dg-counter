@@ -40,14 +40,13 @@ if (process.env.NODE_ENV === "production") {
             console.log("Subject:", mailOptions.subject);
             console.log("Text:", mailOptions.text);
             console.log("HTML:", mailOptions.html);
-            console.log("Magic Link:", mailOptions.html.match(/href="([^"]*)/)[1]);
             console.log("======================================");
             return Promise.resolve();
         },
     };
 }
 
-// Request magic link
+// Request passcode
 router.post("/login", async (req, res) => {
     try {
         const { email } = req.body;
@@ -56,8 +55,8 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ message: "Email is required" });
         }
 
-        // Generate a random token
-        const token = cryptoRandomString({ length: 64, type: "url-safe" });
+        // Generate a random 6-digit passcode
+        const passcode = cryptoRandomString({ length: 6, type: "numeric" });
         const expiry = new Date(Date.now() + 3600000); // 1 hour from now
 
         // Find or create user
@@ -66,81 +65,62 @@ router.post("/login", async (req, res) => {
             user = new User({ email });
         }
 
-        // Update user with token
-        user.magicLinkToken = token;
-        user.magicLinkExpiry = expiry;
+        // Update user with passcode
+        user.passcode = passcode;
+        user.passcodeExpiry = expiry;
         await user.save();
-        console.log(`Token ${token} set for user ${user.email}`);
+        console.log(`Passcode ${passcode} set for user ${user.email}`);
 
-        // Generate magic link URL using BASE_URL environment variable
-        const baseUrl =
-            process.env.BASE_URL ||
-            (process.env.NODE_ENV === "production"
-                ? `${req.protocol}://${req.get("host")}`
-                : "http://localhost:5173");
-
-        const magicLink = `${baseUrl}/api/auth/verify?token=${token}`;
-
-        // Send email
+        // Send email with passcode
         await transporter.sendMail({
             to: email,
-            subject: "Your login link for DG Tracker",
-            text: `Click the following link to log in: ${magicLink}`,
+            subject: "Your login passcode for DG Tracker",
+            text: `Your login passcode is: ${passcode}\nThis passcode will expire in 1 hour.`,
             html: `
-        <p>Click the following link to log in:</p>
-        <p><a href="${magicLink}">Log in to DG Tracker</a></p>
-        <p>This link will expire in 1 hour.</p>
+        <p>Your login passcode is: <strong>${passcode}</strong></p>
+        <p>This passcode will expire in 1 hour.</p>
       `,
         });
 
-        res.status(200).json({ message: "Magic link sent to your email" });
+        res.status(200).json({ message: "Passcode sent to your email" });
     } catch (error) {
         console.error("Login error:", error);
         res.status(500).json({ message: "Server error" });
     }
 });
 
-// Verify magic link
-router.get("/verify", async (req, res) => {
+// Verify passcode
+router.post("/verify", async (req, res) => {
     try {
-        const { token } = req.query;
+        const { email, passcode } = req.body;
 
-        if (!token) {
-            console.error("Verification error: No token provided");
-            return res.status(400).send("Invalid or missing token");
+        if (!email || !passcode) {
+            return res.status(400).json({ message: "Email and passcode are required" });
         }
 
-        console.log("Looking for user with magic link token:", token);
         const user = await User.findOne({
-            magicLinkToken: token,
-            magicLinkExpiry: { $gt: new Date() },
+            email,
+            passcode,
+            passcodeExpiry: { $gt: new Date() },
         });
 
         if (!user) {
-            console.error("Verification error: User not found or token expired");
-            return res.status(400).send("Invalid or expired link");
+            return res.status(400).json({ message: "Invalid or expired passcode" });
         }
-
-        console.log("User found:", user.email);
 
         // Generate JWT token
         const jwtToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION });
-        console.log("JWT token generated successfully");
 
         // Update user data
-        user.magicLinkToken = null;
-        user.magicLinkExpiry = null;
+        user.passcode = null;
+        user.passcodeExpiry = null;
         user.lastLogin = new Date();
         await user.save();
-        console.log("User updated, magic link token cleared");
 
-        // Redirect to frontend with token
-        const redirectUrl = `/?token=${jwtToken}`;
-        console.log("Redirecting to:", redirectUrl);
-        res.redirect(redirectUrl);
+        res.status(200).json({ token: jwtToken });
     } catch (error) {
-        console.error("Verification error details:", error);
-        res.status(500).send("Server error");
+        console.error("Verification error:", error);
+        res.status(500).json({ message: "Server error" });
     }
 });
 
@@ -155,9 +135,7 @@ router.post("/verify-token", async (req, res) => {
         }
 
         try {
-            console.log({ token, JWT_SECRET });
             const decoded = jwt.verify(token, JWT_SECRET);
-            console.log({ userID: decoded.userId });
             const user = await User.findById(decoded.userId);
 
             if (!user) {
@@ -165,7 +143,6 @@ router.post("/verify-token", async (req, res) => {
                 return res.status(401).json({ authenticated: false });
             }
 
-            console.log("Token verification successful for user:", user.email);
             res.status(200).json({
                 authenticated: true,
                 user: {

@@ -1,5 +1,4 @@
 import "./loadenv.js";
-console.log(process.env);
 import express from "express";
 import router from "./routes/index.js";
 import winston from "winston";

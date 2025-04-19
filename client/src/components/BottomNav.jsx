@@ -40,7 +40,7 @@ export default function BottomNav() {
             <BottomNavigation showLabels value={pathname} onChange={onClick}>
                 <BottomNavigationAction label="Home" value="/" icon={<HomeIcon />} />
                 {/* <BottomNavigationAction label="Latest" value="/latest" icon={<NotificationsIcon />} /> */}
-                <BottomNavigationAction label="New Game" value="/game" icon={<PlusIcon />} />
+                <BottomNavigationAction label="New Game" value="/new-game" icon={<PlusIcon />} />
                 <BottomNavigationAction label="Account" value="/account" icon={<AccountCircleIcon />} />
             </BottomNavigation>
         </Box>

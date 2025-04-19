@@ -9,6 +9,9 @@ import "./index.css";
 import theme from "./theme";
 import ROUTES from "./routes";
 import "./unregisterServiceWorkers.js";
+// import { registerSW } from "virtual:pwa-register";
+
+// registerSW({ immediate: true });
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>

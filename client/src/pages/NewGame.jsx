@@ -1,125 +1,12 @@
-import {
-    Box,
-    Button,
-    Container,
-    OutlinedInput,
-    Stack,
-    Typography,
-    InputLabel,
-    Paper,
-    Divider,
-} from "@mui/material";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import TopBar from "../components/TopBar";
-import Header from "../components/Header";
 import { Remove } from "@mui/icons-material";
-import GameCard from "../components/GameCard";
-import Layout from "../components/Layout";
-import api from "../utils/api";
+import { Box, Button, InputLabel, OutlinedInput, Paper, Stack, Typography } from "@mui/material";
+import { useState } from "react";
+import CourseSearch from "../components/CourseSearch";
+import useGame from "../hooks/useGame";
+import fantasyGameNames from "../utils/gameNames";
 
-// List of 100 fantasy-themed game names
-const fantasyGameNames = [
-    "Mystic Realms",
-    "Dragon's Lair",
-    "Enchanted Quest",
-    "Wizards of Arcana",
-    "Shadow Kingdom",
-    "Elven Legacy",
-    "Forgotten Spells",
-    "Crystal Chronicles",
-    "Mythic Legends",
-    "Realm of Titans",
-    "Sorcerer's Path",
-    "Fae Wilderness",
-    "Ancient Runes",
-    "Dragonfire",
-    "Celestial Kingdoms",
-    "Mage's Journey",
-    "Phantom Gates",
-    "Twilight Guardians",
-    "Ethereal Dominion",
-    "Arcane Odyssey",
-    "Mystic Forge",
-    "Valiant Hearts",
-    "Emerald Dynasty",
-    "Obsidian Tower",
-    "Crimson Spire",
-    "Astral Voyage",
-    "Frostbound Realms",
-    "Phoenix Rising",
-    "Thunderstrike Saga",
-    "Moonlight Crusade",
-    "Starfall Legacy",
-    "Dwarven Halls",
-    "Orc Uprising",
-    "Goblin's Gold",
-    "Troll Hunter",
-    "Unicorn Valley",
-    "Griffin's Flight",
-    "Centaur Plains",
-    "Minotaur's Maze",
-    "Kraken's Deep",
-    "Hydra's Lair",
-    "Chimera's Roar",
-    "Basilisk Eye",
-    "Wyvern's Peak",
-    "Pegasus Wings",
-    "Mermaid Cove",
-    "Siren's Call",
-    "Vampire's Castle",
-    "Werewolf Moon",
-    "Ghost Whispers",
-    "Banshee's Cry",
-    "Wraith Walker",
-    "Lich Kingdom",
-    "Party of Necromancers",
-    "Paladin's Oath",
-    "Cleric's Blessing",
-    "Ranger's Trail",
-    "Barbarian Saga",
-    "Bard's Tale",
-    "Rogue's Fortune",
-    "Monk's Journey",
-    "Druid's Grove",
-    "Warlock's Pact",
-    "Alchemist's Brew",
-    "Summoner's Circle",
-    "Enchanter's Illusion",
-    "Diviner's Vision",
-    "Conjurer's Trick",
-    "Illusionist's Dream",
-    "Abjurer's Shield",
-    "Transmuter's Touch",
-    "Evocation Storm",
-    "Time Wanderer",
-    "Pyromancer's Flame",
-    "Frost Kingdom",
-    "Earth's Echoes",
-    "Windswept Realms",
-    "Ocean's Depths",
-    "Shadow Realm",
-    "Light's Dominion",
-    "Void Passage",
-    "Wanderer's Path",
-    "Spell Weaving",
-    "Rune Mysteries",
-    "Soul Binding",
-    "Dream Shaping",
-    "Storm Calling",
-    "Earth Shaking",
-    "Flame Keeping",
-    "Frost Binding",
-    "Star Gazing",
-    "Moon Chasing",
-    "Sun Seeking",
-    "Wind Riding",
-    "Stone Heart Journey",
-    "Iron Forging",
-    "Golden Hands",
-];
 const Game = () => {
-    const navigate = useNavigate();
+    const { startGame } = useGame();
     const [players, setPlayers] = useState([]);
     const [playerName, setPlayerName] = useState("");
     const [gameName, setGameName] = useState("");
@@ -133,20 +20,6 @@ const Game = () => {
 
     const removePlayer = (index) => {
         setPlayers(players.filter((_, i) => i !== index));
-    };
-
-    const startGame = async () => {
-        try {
-            const game = await api.post("/api/game", {
-                players,
-                gameName,
-                holes,
-                courseName,
-            });
-            navigate(`/game/play/${game._id}`);
-        } catch (error) {
-            console.error("Error creating game:", error);
-        }
     };
 
     const onGenerateGameName = async () => {
@@ -170,6 +43,7 @@ const Game = () => {
             setHoles(1);
         }
     };
+
     return (
         <>
             <Stack spacing={2}>
@@ -231,11 +105,12 @@ const Game = () => {
                     </Stack>
                     <Stack spacing={1}>
                         <InputLabel>Course Name (optional)</InputLabel>
-                        <OutlinedInput
+                        <CourseSearch onChange={(newValue) => setCourseName(newValue)} />
+                        {/* <OutlinedInput
                             placeholder="Course name"
                             value={courseName}
                             onChange={(e) => setCourseName(e.target.value)}
-                        />
+                        /> */}
                     </Stack>
                 </Stack>
                 <Stack justifyContent={"end"}>
@@ -246,7 +121,7 @@ const Game = () => {
                         size="large"
                         disabled={players.length === 0 || gameName === "" || holes === 0 || !holes}
                         onClick={() => {
-                            startGame();
+                            startGame(players, gameName, holes, courseName);
                         }}
                     >
                         Start Game
@@ -257,7 +132,7 @@ const Game = () => {
     );
 };
 
-const GamePreviewCard = ({ onRemovePlayer, gameName, courseName, holes, players }) => {
+const GamePreviewCard = ({ onRemovePlayer, players }) => {
     return (
         <Stack spacing={2} direction={"row"} justifyContent={"space-between"}>
             <Box>

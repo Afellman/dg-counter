@@ -2,7 +2,7 @@ import { lazy } from "react";
 
 // Use lazy loading for components
 const App = lazy(() => import("./App.jsx"));
-const Game = lazy(() => import("./pages/Game.jsx"));
+const NewGame = lazy(() => import("./pages/NewGame.jsx"));
 const Play = lazy(() => import("./pages/Play.jsx"));
 const Results = lazy(() => import("./pages/Results.jsx"));
 const AllGames = lazy(() => import("./pages/AllGames.jsx"));
@@ -17,8 +17,8 @@ const ROUTES = [
         title: "DG Tracker",
     },
     {
-        path: "/game",
-        element: Game,
+        path: "/new-game",
+        element: NewGame,
         title: "New Game",
     },
     {

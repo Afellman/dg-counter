@@ -1,4 +1,4 @@
-import { EmojiEvents, Flag, Person } from "@mui/icons-material";
+import { Flag, Person } from "@mui/icons-material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import {
     Alert,
@@ -61,6 +61,7 @@ const GameCard = ({ game, showUser, onDelete }) => {
             console.log("error deleting game");
             setSnack({ msg: "Error deleting game", type: "error" });
         } else {
+            onDelete();
             setSnack({ msg: "Game deleted", type: "success" });
         }
     };

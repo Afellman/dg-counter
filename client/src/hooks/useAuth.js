@@ -20,26 +20,38 @@ const useAuth = () => {
             }
 
             try {
-                const data = await api.post("/api/auth/verify-token", { token });
+                if (navigator.onLine) {
+                    const data = await api.post("/api/auth/verify-token", { token });
 
-                if (data.authenticated) {
+                    if (data.authenticated) {
+                        setAuthState({
+                            isAuthenticated: true,
+                            user: data.user,
+                            loading: false,
+                        });
+                        localStorage.setItem("user", JSON.stringify(data.user));
+                    } else {
+                        // Token is invalid
+                        localStorage.removeItem("authToken");
+                        localStorage.removeItem("user");
+                        setAuthState({
+                            isAuthenticated: false,
+                            user: null,
+                            loading: false,
+                        });
+                    }
+                } else {
+                    const user = JSON.parse(localStorage.getItem("user"));
                     setAuthState({
                         isAuthenticated: true,
-                        user: data.user,
-                        loading: false,
-                    });
-                } else {
-                    // Token is invalid
-                    localStorage.removeItem("authToken");
-                    setAuthState({
-                        isAuthenticated: false,
-                        user: null,
+                        user: user,
                         loading: false,
                     });
                 }
             } catch (error) {
                 console.error("Token verification error:", error);
                 localStorage.removeItem("authToken");
+                localStorage.removeItem("user");
                 setAuthState({
                     isAuthenticated: false,
                     user: null,
@@ -65,6 +77,7 @@ const useAuth = () => {
     // Logout function
     const logout = useCallback(() => {
         localStorage.removeItem("authToken");
+        localStorage.removeItem("user");
         setAuthState({
             isAuthenticated: false,
             user: null,

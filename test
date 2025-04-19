@@ -1,0 +1,128 @@
+  {
+    _id: ObjectId("67fc217c67ce07d91acd3390"),
+    user: ObjectId("67f1e407c3a5b1c5bc4ea50d"),
+    players: [
+      {
+        name: 'adsf',
+        scores: [
+          {
+            hole: 1,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd3392")
+          },
+          {
+            hole: 2,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd3393")
+          },
+          {
+            hole: 3,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd3394")
+          },
+          {
+            hole: 4,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd3395")
+          },
+          {
+            hole: 5,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd3396")
+          },
+          {
+            hole: 6,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd3397")
+          },
+          {
+            hole: 7,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd3398")
+          },
+          {
+            hole: 8,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd3399")
+          },
+          {
+            hole: 9,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd339a")
+          },
+          {
+            hole: 10,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd339b")
+          },
+          {
+            hole: 11,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd339c")
+          },
+          {
+            hole: 12,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd339d")
+          },
+          {
+            hole: 13,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd339e")
+          },
+          {
+            hole: 14,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd339f")
+          },
+          {
+            hole: 15,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd33a0")
+          },
+          {
+            hole: 16,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd33a1")
+          },
+          {
+            hole: 17,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd33a2")
+          },
+          {
+            hole: 18,
+            strokes: 3,
+            _id: ObjectId("67fc217c67ce07d91acd33a3")
+          }
+        ],
+        _id: ObjectId("67fc217c67ce07d91acd3391")
+      }
+    ],
+    holes: [
+      { number: 1, par: 3, _id: ObjectId("67fc217c67ce07d91acd33a4") },
+      { number: 2, par: 3, _id: ObjectId("67fc217c67ce07d91acd33a5") },
+      { number: 3, par: 3, _id: ObjectId("67fc217c67ce07d91acd33a6") },
+      { number: 4, par: 3, _id: ObjectId("67fc217c67ce07d91acd33a7") },
+      { number: 5, par: 3, _id: ObjectId("67fc217c67ce07d91acd33a8") },
+      { number: 6, par: 3, _id: ObjectId("67fc217c67ce07d91acd33a9") },
+      { number: 7, par: 3, _id: ObjectId("67fc217c67ce07d91acd33aa") },
+      { number: 8, par: 3, _id: ObjectId("67fc217c67ce07d91acd33ab") },
+      { number: 9, par: 3, _id: ObjectId("67fc217c67ce07d91acd33ac") },
+      { number: 10, par: 3, _id: ObjectId("67fc217c67ce07d91acd33ad") },
+      { number: 11, par: 3, _id: ObjectId("67fc217c67ce07d91acd33ae") },
+      { number: 12, par: 3, _id: ObjectId("67fc217c67ce07d91acd33af") },
+      { number: 13, par: 3, _id: ObjectId("67fc217c67ce07d91acd33b0") },
+      { number: 14, par: 3, _id: ObjectId("67fc217c67ce07d91acd33b1") },
+      { number: 15, par: 3, _id: ObjectId("67fc217c67ce07d91acd33b2") },
+      { number: 16, par: 3, _id: ObjectId("67fc217c67ce07d91acd33b3") },
+      { number: 17, par: 3, _id: ObjectId("67fc217c67ce07d91acd33b4") },
+      { number: 18, par: 3, _id: ObjectId("67fc217c67ce07d91acd33b5") }
+    ],
+    currentHole: 3,
+    courseName: 'adsf',
+    gameName: 'asdf',
+    createdAt: ISODate("2025-04-13T20:41:32.042Z"),
+    updatedAt: ISODate("2025-04-13T20:47:26.608Z"),
+    __v: 0
+  }

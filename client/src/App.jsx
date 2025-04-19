@@ -1,4 +1,4 @@
-import { Button, Container, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Button, Container, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import GameCard from "./components/GameCard";
@@ -42,13 +42,13 @@ function App() {
 
     return (
         <>
-            <Container
+            <Box
                 style={{
                     display: "flex",
                     position: "fixed",
                     bottom: "74px",
                     maxWidth: "700px",
-                    // marginLeft: "-24px",
+                    width: "100%",
                     paddingRight: "32px",
                     justifyContent: "end",
                 }}
@@ -60,13 +60,13 @@ function App() {
                         variant="contained"
                         color="warning"
                         onClick={() => {
-                            navigate("/game");
+                            navigate("/new-game");
                         }}
                     >
                         Start new game
                     </Button>
                 </div>
-            </Container>
+            </Box>
 
             <Tabs value={activeTab} onChange={handleTabChange} variant="fullWidth">
                 <Tab label="My Games" />

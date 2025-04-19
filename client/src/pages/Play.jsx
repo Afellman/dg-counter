@@ -1,82 +1,20 @@
-import { Typography, Stack, Box, Container, Button, Divider, Card } from "@mui/material";
-import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { Add, Remove, ArrowBack, ArrowForward } from "@mui/icons-material";
-import TopBar from "../components/TopBar";
-import Header from "../components/Header";
-import api from "../utils/api";
+import { Add, ArrowBack, ArrowForward, Remove } from "@mui/icons-material";
+import { Box, Button, Divider, Stack, Typography } from "@mui/material";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import useGame from "../hooks/useGame";
 
 const Play = () => {
     const { id } = useParams();
-    const [game, setGame] = useState(null);
-    const navigate = useNavigate();
+    const { game, onChangeHole, onChangeStroke, onChangePar, loadGame } = useGame();
 
     useEffect(() => {
-        api.get(`/api/game/${id}`)
-            .then((data) => {
-                setGame(data);
-            })
-            .catch((error) => console.error("Error fetching game:", error));
+        loadGame(id);
     }, [id]);
-
-    const onChangeHole = async (direction) => {
-        if (game.currentHole === game.holes.length && direction === 1) {
-            navigate(`/game/results/${game._id}?finish=true`);
-            return;
-        }
-        try {
-            const data = await api.put(`/api/game/${game._id}/hole`, { direction });
-            setGame(data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const updateScore = async (playerID, direction) => {
-        const newGame = { ...game };
-
-        const player = newGame.players.find((p) => p._id.toString() === playerID);
-        const thisHole = player.scores.find((s) => s.hole === game.currentHole);
-
-        if (thisHole) {
-            thisHole.strokes += direction;
-        } else {
-            player.scores.push({ hole: game.currentHole, strokes: direction });
-        }
-
-        setGame(newGame);
-    };
-
-    const onChangeStroke = async (playerID, direction) => {
-        const oldGame = { ...game };
-        updateScore(playerID, direction);
-        try {
-            await api.put(`/api/game/${game._id}/${playerID}/stroke`, { stroke: direction });
-        } catch (error) {
-            console.error(error);
-            // Revert the optimistic update
-            setGame(oldGame);
-        }
-    };
 
     if (!game) {
         return <div>Loading...</div>;
     }
-
-    const onChangePar = async (direction) => {
-        const newGame = { ...game };
-        const oldGame = { ...game };
-        const newPar = newGame.holes[game.currentHole - 1].par + direction;
-        newGame.holes[game.currentHole - 1].par = newPar;
-        setGame(newGame);
-
-        try {
-            await api.put(`/api/game/${game._id}/hole/${game.currentHole}`, { par: newPar });
-        } catch (error) {
-            console.error(error);
-            setGame(oldGame);
-        }
-    };
 
     return (
         <>

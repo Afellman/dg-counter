@@ -7,7 +7,15 @@ const Layout = ({ children }) => {
     const { isAuthenticated } = useUser();
 
     return (
-        <Box sx={{ pb: isAuthenticated ? 9 : 2, maxWidth: "700px", margin: "0 auto" }}>
+        <Box
+            sx={{
+                background: "#f7f7f7",
+                boxShadow: 3,
+                pb: isAuthenticated ? 9 : 2,
+                maxWidth: "700px",
+                margin: "0 auto",
+            }}
+        >
             <TopBar />
             <Stack
                 spacing={2}

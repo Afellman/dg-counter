@@ -12,11 +12,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
-    magicLinkToken: {
+    passcode: {
         type: String,
         default: null,
     },
-    magicLinkExpiry: {
+    passcodeExpiry: {
         type: Date,
         default: null,
     },

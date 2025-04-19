@@ -6,28 +6,16 @@ import api from "../utils/api";
 const AuthWrapper = ({ children }) => {
     const { isAuthenticated, loading, verifyToken } = useAuth();
     const [email, setEmail] = useState("");
-    const [magicLinkSent, setMagicLinkSent] = useState(false);
+    const [passcode, setPasscode] = useState("");
+    const [passcodeSent, setPasscodeSent] = useState(false);
     const [error, setError] = useState("");
-    const [tokenProcessed, setTokenProcessed] = useState(false);
 
     useEffect(() => {
-        // Check if there's a token in the URL (after magic link redirect)
-        const params = new URLSearchParams(window.location.search);
-        const urlToken = params.get("token");
-        const lsToken = localStorage.getItem("authToken");
-
-        if (urlToken && !tokenProcessed) {
-            // Store token and remove it from URL
-            localStorage.setItem("authToken", urlToken);
-            window.history.replaceState({}, document.title, window.location.pathname);
-            setTokenProcessed(true);
-
-            // Instead of reloading, notify the auth hook about the new token
-            verifyToken(urlToken);
-        } else if (loading) {
+        if (loading) {
+            const lsToken = localStorage.getItem("authToken");
             verifyToken(lsToken);
         }
-    }, [tokenProcessed, verifyToken, loading]);
+    }, [verifyToken, loading]);
 
     const handleLogin = async () => {
         if (!email || !email.includes("@")) {
@@ -37,11 +25,27 @@ const AuthWrapper = ({ children }) => {
 
         try {
             await api.post("/api/auth/login", { email });
-            setMagicLinkSent(true);
+            setPasscodeSent(true);
             setError("");
         } catch (error) {
             console.error("Login error:", error);
             setError("An error occurred. Please try again.");
+        }
+    };
+
+    const handleVerify = async () => {
+        if (!passcode || passcode.length !== 6) {
+            setError("Please enter a valid 6-digit passcode");
+            return;
+        }
+
+        try {
+            const response = await api.post("/api/auth/verify", { email, passcode });
+            localStorage.setItem("authToken", response.token);
+            verifyToken(response.token);
+        } catch (error) {
+            console.error("Verification error:", error);
+            setError("Invalid passcode. Please try again.");
         }
     };
 
@@ -56,7 +60,7 @@ const AuthWrapper = ({ children }) => {
     if (!isAuthenticated) {
         return (
             <Stack spacing={2}>
-                {!magicLinkSent ? (
+                {!passcodeSent ? (
                     <>
                         <Typography>Sign in with your email</Typography>
                         <Stack direction="row" justifyContent="space-between" spacing={2}>
@@ -69,20 +73,37 @@ const AuthWrapper = ({ children }) => {
                                 onKeyPress={(e) => e.key === "Enter" && handleLogin()}
                             />
                             <Button variant="contained" onClick={handleLogin}>
-                                Send Login Link
+                                Send Passcode
                             </Button>
                         </Stack>
                         {error && <Alert severity="error">{error}</Alert>}
                     </>
                 ) : (
                     <Box sx={{ p: 2, bgcolor: "background.paper", borderRadius: 1 }}>
-                        <Typography>Magic link sent!</Typography>
+                        <Typography>Passcode sent!</Typography>
                         <Typography variant="body2" sx={{ mt: 1 }}>
-                            Check your email ({email}) for a login link. The link is valid for 1 hour.
+                            Check your email ({email}) for a 6-digit passcode. The passcode is valid for 1
+                            hour.
                         </Typography>
-                        <Button variant="text" onClick={() => setMagicLinkSent(false)} sx={{ mt: 2 }}>
+                        <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+                            <OutlinedInput
+                                placeholder="Enter passcode"
+                                value={passcode}
+                                onChange={(e) => setPasscode(e.target.value)}
+                                onKeyPress={(e) => e.key === "Enter" && handleVerify()}
+                            />
+                            <Button variant="contained" onClick={handleVerify}>
+                                Verify
+                            </Button>
+                        </Stack>
+                        <Button variant="text" onClick={() => setPasscodeSent(false)} sx={{ mt: 2 }}>
                             Use a different email
                         </Button>
+                        {error && (
+                            <Alert severity="error" sx={{ mt: 2 }}>
+                                {error}
+                            </Alert>
+                        )}
                     </Box>
                 )}
             </Stack>

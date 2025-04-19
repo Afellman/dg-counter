@@ -6,33 +6,30 @@ import { VitePWA } from "vite-plugin-pwa";
 export default defineConfig({
     plugins: [
         react(),
-        // VitePWA({
-        //     registerType: "autoUpdate",
-        //     includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
-        //     manifest: {
-        //         name: "DG Tracker",
-        //         short_name: "DG Tracker",
-        //         description: "Disc Golf Score Tracking App",
-        //         theme_color: "#ffffff",
-        //         icons: [
-        //             {
-        //                 src: "pwa-192x192.png",
-        //                 sizes: "192x192",
-        //                 type: "image/png",
-        //             },
-        //             {
-        //                 src: "pwa-512x512.png",
-        //                 sizes: "512x512",
-        //                 type: "image/png",
-        //             },
-        //             {
-        //                 src: "pwa-512x512.png",
-        //                 sizes: "512x512",
-        //                 purpose: "any maskable",
-        //             },
-        //         ],
-        //     },
-        // }),
+        VitePWA({
+            registerType: "autoUpdate",
+            workbox: {
+                globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"], // Cache only these files
+                runtimeCaching: [
+                    {
+                        // Cache static assets like images/fonts if needed
+                        urlPattern: /\.(?:png|jpg|jpeg|svg|woff2?)$/,
+                        handler: "CacheFirst",
+                        options: {
+                            cacheName: "assets-cache",
+                            expiration: {
+                                maxEntries: 50,
+                                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                            },
+                        },
+                    },
+                    // NO API route caching — simply don’t include an entry that matches it
+                ],
+            },
+            devOptions: {
+                enabled: true,
+            },
+        }),
     ],
     build: {
         outDir: "../public",
