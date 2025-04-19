@@ -21,12 +21,8 @@ const useGame = () => {
     };
 
     const updateGame = async (data) => {
-        setGame((prev) => {
-            const newGame = { ...prev, ...data };
-            localStorage.setItem("game", JSON.stringify(newGame));
-            return newGame;
-        });
-
+        localStorage.setItem("game", JSON.stringify(data));
+        setGame(data);
         await updateGameInDB(data);
     };
 
@@ -34,7 +30,7 @@ const useGame = () => {
         const newGame = { ...game };
         newGame.currentHole += direction;
 
-        updateGame({ currentHole: newGame.currentHole });
+        updateGame({ ...newGame, currentHole: newGame.currentHole });
 
         if (game.currentHole === game.holes.length && direction === 1) {
             navigate(`/game/results/${game._id}?finish=true`);
