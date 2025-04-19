@@ -23,7 +23,12 @@ export default defineConfig({
                             },
                         },
                     },
-                    // NO API route caching — simply don’t include an entry that matches it
+                    {
+                        // Never cache the version endpoint
+                        urlPattern: /\/api\/system\/version/,
+                        handler: "NetworkOnly",
+                    },
+                    // NO API route caching — simply don't include an entry that matches it
                 ],
             },
             devOptions: {
