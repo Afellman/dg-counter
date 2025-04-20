@@ -45,6 +45,11 @@ const gameSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    isFinished: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
 });
 
 gameSchema.set("timestamps", true);

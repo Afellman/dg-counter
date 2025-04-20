@@ -31,11 +31,15 @@ const useGame = () => {
         newGame.currentHole += direction;
 
         updateGame({ ...newGame, currentHole: newGame.currentHole });
+    };
 
-        if (game.currentHole === game.holes.length && direction === 1) {
-            navigate(`/game/results/${game._id}?finish=true`);
-            return;
-        }
+    const onFinishGame = async () => {
+        const newGame = { ...game };
+        newGame.isFinished = true;
+        await updateGameInDB(newGame);
+        localStorage.removeItem("game");
+        setGame(null);
+        navigate(`/game/results/${game._id}?finish=true`);
     };
 
     const onChangeStroke = async (playerID, direction) => {
@@ -120,6 +124,7 @@ const useGame = () => {
         onChangeStroke,
         onChangePar,
         loadGame,
+        onFinishGame,
     };
 };
 

@@ -6,7 +6,7 @@ import useGame from "../hooks/useGame";
 
 const Play = () => {
     const { id } = useParams();
-    const { game, onChangeHole, onChangeStroke, onChangePar, loadGame } = useGame();
+    const { game, onChangeHole, onChangeStroke, onChangePar, loadGame, onFinishGame } = useGame();
 
     useEffect(() => {
         loadGame(id);
@@ -75,15 +75,26 @@ const Play = () => {
                         justifyContent: "space-between",
                     }}
                 >
-                    <Button color="secondary" style={{ borderRadius: 50 }} onClick={() => onChangeHole(-1)}>
+                    <Button
+                        color="secondary"
+                        disabled={game.currentHole === 1}
+                        style={{ borderRadius: 50 }}
+                        onClick={() => onChangeHole(-1)}
+                    >
                         <ArrowBack />
                     </Button>
                     <Typography variant="h4" textAlign="center">
                         Hole {game.currentHole}
                     </Typography>
-                    <Button color="secondary" onClick={() => onChangeHole(1)}>
-                        {game.currentHole === game.holes.length ? "Finish" : <ArrowForward />}
-                    </Button>
+                    {game.currentHole === game.holes.length ? (
+                        <Button color="success" onClick={() => onFinishGame()}>
+                            Finish
+                        </Button>
+                    ) : (
+                        <Button color="secondary" onClick={() => onChangeHole(1)}>
+                            <ArrowForward />
+                        </Button>
+                    )}
                 </Box>
             </Stack>
         </>

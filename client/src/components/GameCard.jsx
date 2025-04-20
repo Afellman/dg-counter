@@ -26,7 +26,7 @@ const GameCard = ({ game, showUser, onDelete }) => {
     const [snack, setSnack] = useState(null);
 
     const onClick = () => {
-        if (game.currentHole === game.holes.length) {
+        if (game.isFinished) {
             navigate(`/game/results/${game._id}`);
         } else if (userID === game.user._id) {
             navigate(`/game/play/${game._id}`);
@@ -34,7 +34,7 @@ const GameCard = ({ game, showUser, onDelete }) => {
     };
 
     // Calculate if game is complete
-    const isComplete = game.currentHole === game.holes.length;
+    const isComplete = game.isFinished;
 
     const handleOpenPopover = (e) => {
         e.preventDefault();
