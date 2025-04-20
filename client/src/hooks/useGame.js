@@ -3,20 +3,25 @@ import { useNavigate } from "react-router-dom";
 import currentGameAtom from "../atoms/currentGameAtom";
 import api from "../utils/api";
 import useUser from "./useUser";
+import { useState } from "react";
 
 const useGame = () => {
     const [game, setGame] = useAtom(currentGameAtom);
     const navigate = useNavigate();
     const { user } = useUser();
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState("");
 
     window.game = game;
     const updateGameInDB = async (data) => {
         try {
             await api.post(`/api/game`, data);
             setGame((prev) => ({ ...prev, ...data, isNotSynced: false }));
+            return true;
         } catch (error) {
             setGame((prev) => ({ ...prev, isNotSynced: true }));
             console.error(error);
+            return false;
         }
     };
 
@@ -36,16 +41,25 @@ const useGame = () => {
     const onFinishGame = async () => {
         const newGame = { ...game };
         newGame.isFinished = true;
-        await updateGameInDB(newGame);
+        const success = await updateGameInDB(newGame);
+        if (false) {
+            clearLocalGame();
+            navigate(`/game/results/${game._id}?finish=true`);
+        } else {
+            setOpen(true);
+            setMessage("Error finishing game");
+        }
+    };
+
+    const clearLocalGame = () => {
         localStorage.removeItem("game");
         setGame(null);
-        navigate(`/game/results/${game._id}?finish=true`);
     };
 
     const onChangeStroke = async (playerID, direction) => {
         const newGame = { ...game };
 
-        const player = newGame.players.find((p) => p._id.toString() === playerID);
+        const player = newGame.players.find((p) => p.id.toString() === playerID);
         const thisHole = player.scores.find((s) => s.hole === game.currentHole);
 
         if (thisHole) {
@@ -85,6 +99,7 @@ const useGame = () => {
             gameID: generateUniqueId(),
             user: user._id,
             players: players.map((player) => ({
+                id: generateUniqueId(),
                 name: player,
                 scores: new Array(parseInt(holes)).fill(0).map((_, i) => ({
                     hole: i + 1,
@@ -95,6 +110,7 @@ const useGame = () => {
             courseName,
             // Assuming all holes have the same par to start
             holes: new Array(parseInt(holes)).fill(0).map((_, i) => ({
+                id: generateUniqueId(),
                 number: i + 1,
                 par: 3,
             })),
@@ -115,6 +131,16 @@ const useGame = () => {
         }
     };
 
+    const handleSaveLater = async () => {
+        const newGame = { ...game };
+        newGame.isNotSynced = true;
+        newGame.isFinished = true;
+        const unsavedGames = JSON.parse(localStorage.getItem("unsavedGames")) || [];
+        localStorage.setItem("unsavedGames", JSON.stringify([...unsavedGames, newGame]));
+        clearLocalGame();
+        navigate("/");
+    };
+
     return {
         game,
         ...game,
@@ -125,6 +151,12 @@ const useGame = () => {
         onChangePar,
         loadGame,
         onFinishGame,
+        open,
+        setOpen,
+        message,
+        setMessage,
+        handleSaveLater,
+        updateGameInDB,
     };
 };
 

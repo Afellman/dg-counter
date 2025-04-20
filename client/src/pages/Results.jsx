@@ -38,7 +38,7 @@ const Results = () => {
                             }, 0);
 
                             return (
-                                <Box key={player._id} sx={{ flex: 1, textAlign: "center" }}>
+                                <Box key={player.id} sx={{ flex: 1, textAlign: "center" }}>
                                     <Typography variant="h6">{player.name}</Typography>
                                     <Typography variant="subtitle1">
                                         {totalScore > 0 ? "+" : ""}
@@ -64,7 +64,7 @@ const Results = () => {
 
                                 return (
                                     <Box
-                                        key={player._id}
+                                        key={player.id}
                                         sx={{
                                             flex: 1,
                                             display: "flex",
@@ -77,8 +77,8 @@ const Results = () => {
                                                     relativeToPar === 0
                                                         ? "#fff"
                                                         : relativeToPar > 0
-                                                        ? "#ffebee"
-                                                        : "#e8f5e9",
+                                                          ? "#ffebee"
+                                                          : "#e8f5e9",
                                                 borderRadius: "4px",
                                                 padding: "4px 12px",
                                                 textAlign: "center",

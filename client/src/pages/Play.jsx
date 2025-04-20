@@ -1,12 +1,24 @@
 import { Add, ArrowBack, ArrowForward, Remove } from "@mui/icons-material";
-import { Box, Button, Divider, Stack, Typography } from "@mui/material";
+import { Box, Button, Divider, Snackbar, Stack, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useGame from "../hooks/useGame";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Play = () => {
     const { id } = useParams();
-    const { game, onChangeHole, onChangeStroke, onChangePar, loadGame, onFinishGame } = useGame();
+    const {
+        game,
+        onChangeHole,
+        onChangeStroke,
+        onChangePar,
+        loadGame,
+        onFinishGame,
+        open,
+        setOpen,
+        message,
+        handleSaveLater,
+    } = useGame();
 
     useEffect(() => {
         loadGame(id);
@@ -18,6 +30,18 @@ const Play = () => {
 
     return (
         <>
+            <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                open={open}
+                autoHideDuration={6000}
+                onClose={() => setOpen(false)}
+                message={message}
+                action={
+                    <>
+                        <Button onClick={() => handleSaveLater()}>Save later</Button>
+                    </>
+                }
+            />
             <Stack spacing={2}>
                 {game.players.map((player, i) => (
                     <>
@@ -120,7 +144,7 @@ const PlayerTicks = ({ game, player, onChangeStroke }) => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => onChangeStroke(player._id, -1)}
+                        onClick={() => onChangeStroke(player.id, -1)}
                         sx={{
                             borderRadius: "50%",
                             minWidth: "40px",
@@ -144,7 +168,7 @@ const PlayerTicks = ({ game, player, onChangeStroke }) => {
                         }}
                         variant="contained"
                         color="primary"
-                        onClick={() => onChangeStroke(player._id, 1)}
+                        onClick={() => onChangeStroke(player.id, 1)}
                     >
                         <Add />
                     </Button>

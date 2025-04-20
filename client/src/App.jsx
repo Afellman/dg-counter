@@ -1,20 +1,30 @@
-import { Box, Button, Container, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Button, Container, Stack, Tab, Tabs, Typography, Alert } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import GameCard from "./components/GameCard";
 import api from "./utils/api";
+import { preloadAllComponents } from "./routes";
+import useUnsavedGames from "./hooks/useUnsavedGames";
 
 function App() {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const [recentGames, setRecentGames] = useState([]);
     const [personalGames, setPersonalGames] = useState([]);
+    const { unsavedGames, handleRetrySave } = useUnsavedGames();
 
     // Get tab from URL or default to 0
     const [activeTab, setActiveTab] = useState(() => {
         const tabParam = searchParams.get("tab");
         return tabParam ? parseInt(tabParam, 10) : 0;
     });
+
+    // Preload all components when the app initializes
+    useEffect(() => {
+        preloadAllComponents().catch((error) => {
+            console.error("Error preloading components:", error);
+        });
+    }, []);
 
     const fetchGames = async () => {
         try {
@@ -42,6 +52,40 @@ function App() {
 
     return (
         <>
+            {unsavedGames.length > 0 && (
+                <Alert
+                    severity="warning"
+                    sx={{
+                        mb: 2,
+                        "& .MuiAlert-message": {
+                            flex: 1,
+                            minWidth: 0, // Allows text to wrap properly
+                        },
+                        "& .MuiAlert-action": {
+                            alignItems: "flex-start", // Aligns buttons to top
+                            ml: 1,
+                            mt: 0.5,
+                        },
+                    }}
+                    action={
+                        <Stack direction="row" spacing={1}>
+                            <Button
+                                variant="text"
+                                size="small"
+                                onClick={() => handleRetrySave(unsavedGames[0])}
+                                sx={{ whiteSpace: "nowrap" }}
+                            >
+                                Retry Save
+                            </Button>
+                        </Stack>
+                    }
+                >
+                    <Typography variant="body2" sx={{ wordBreak: "break-word" }}>
+                        You have {unsavedGames.length} unsaved game{unsavedGames.length > 1 ? "s" : ""}.
+                        {unsavedGames[0]?.gameName ? ` Current game: ${unsavedGames[0].gameName}` : ""}
+                    </Typography>
+                </Alert>
+            )}
             <Box
                 style={{
                     display: "flex",

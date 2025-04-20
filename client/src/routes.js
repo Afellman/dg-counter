@@ -53,4 +53,20 @@ const ROUTES = [
     },
 ];
 
+// Function to preload all components
+export const preloadAllComponents = () => {
+    const components = [
+        import("./App.jsx"),
+        import("./pages/NewGame.jsx"),
+        import("./pages/Play.jsx"),
+        import("./pages/Results.jsx"),
+        import("./pages/AllGames.jsx"),
+        import("./pages/MyGames.jsx"),
+        import("./pages/Latest.jsx"),
+        import("./pages/Account.jsx"),
+    ];
+
+    return Promise.all(components);
+};
+
 export default ROUTES;
