@@ -67,6 +67,7 @@ router.get("/:id", async (req, res) => {
                 const objectId = new ObjectId(req.params.id);
                 game = await Game.findOne({ _id: objectId }).populate("user", "email name");
             } catch (err) {
+                console.error(err);
                 // If the ID is not a valid ObjectId, just continue with game being null
             }
         }
